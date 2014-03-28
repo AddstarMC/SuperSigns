@@ -1,0 +1,12 @@
+name: SignMaker
+version: ${build.version}
+author: Schmoller
+
+main: au.com.addstar.signmaker.SignMakerPlugin
+
+commands:
+  signmaker:
+    usage: /<command> <font> <justification> <material> <text>
+
+
+
