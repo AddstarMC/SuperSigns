@@ -90,9 +90,10 @@ public class SignMakerPlugin extends JavaPlugin
 				text += args[i];
 			}
 			
+			BlockFace face = TextWriter.rotateRight(TextWriter.lookToFace(((Player)sender).getEyeLocation().getYaw()));
+			
 			sender.sendMessage(ChatColor.GREEN + "Creating text '" + text + "' at your location using justification " + justification.name() + " with font " + set.getName() + " using material " + material.name());
-			TextWriter.writeText(text, ((Player)sender).getLocation(), BlockFace.NORTH, justification, set, material);
-			// TODO: BlockFace
+			TextWriter.writeText(text, ((Player)sender).getLocation(), face, justification, set, material);
 			
 			return true;
 		}
