@@ -113,7 +113,8 @@ public class CharSet
 					}
 				}
 				
-				set.mChars.put(def[0].charAt(0), charDef);
+				for(int i = 0; i < def[0].length(); ++i)
+					set.mChars.put(def[0].charAt(i), charDef);
 			}
 		}
 		finally
