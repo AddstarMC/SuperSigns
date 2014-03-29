@@ -1,6 +1,10 @@
 package au.com.addstar.signmaker;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
@@ -15,6 +19,24 @@ import org.bukkit.material.WoodenStep;
 
 public class TextWriter
 {
+	public static int getWidth(String text, CharSet set)
+	{
+		CharDef space = set.getChar(' ');
+		
+		int size = 0;
+		
+		for(int i = 0; i < text.length(); ++i)
+		{
+			CharDef ch = set.getChar(text.charAt(i));
+			if(ch == null)
+				ch = space;
+			
+			size += ch.getWidth() + 1;
+		}
+		
+		return size;
+	}
+	
 	public static void writeText(String text, Location location, BlockFace face, Justification justification, CharSet set, Material material)
 	{
 		Validate.isTrue(face == BlockFace.EAST || face == BlockFace.WEST || face == BlockFace.NORTH || face == BlockFace.SOUTH, "Can only use North, East, South, or West direction.");
@@ -190,6 +212,36 @@ public class TextWriter
 		case WEST:
 		default:
 			return BlockFace.NORTH;
+		}
+	}
+	
+	private static Map<String, CharSet> mFonts = new HashMap<String, CharSet>();
+	
+	public static CharSet getFont(String name)
+	{
+		return mFonts.get(name);
+	}
+	
+	public static void reloadFonts()
+	{
+		mFonts.clear();
+		for(File file : SignMakerPlugin.getFontFolder().listFiles())
+		{
+			try
+			{
+				CharSet font = CharSet.load(file);
+				mFonts.put(font.getName(), font);
+			}
+			catch(IllegalArgumentException e)
+			{
+				System.out.println("Failed to load font " + file.getPath());
+				System.out.println(e.getMessage());
+			}
+			catch(IOException e)
+			{
+				System.out.println("Failed to load font " + file.getPath());
+				e.printStackTrace();
+			}
 		}
 	}
 }
