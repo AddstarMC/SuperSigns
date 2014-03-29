@@ -38,6 +38,9 @@ public class TextSign
 	
 	public void clear()
 	{
+		if(mMinimum == null)
+			return;
+		
 		for(int x = mMinimum.getBlockX(); x <= mMaximum.getBlockX(); ++x)
 		{
 			for(int z = mMinimum.getBlockZ(); z <= mMaximum.getBlockZ(); ++z)
@@ -68,15 +71,20 @@ public class TextSign
 		{
 		case Center:
 			mMinimum.add(new Vector((size/2) * -mFace.getModX(), 0, (size/2) * -mFace.getModZ()));
-			mMaximum.add(new Vector((size - (size/2)) * mFace.getModX(), 0, (size - (size/2)) * mFace.getModZ()));
+			mMaximum.add(new Vector((size - (size/2)) * mFace.getModX(), font.getHeight(), (size - (size/2)) * mFace.getModZ()));
 			break;
 		case Right:
 			mMinimum.add(new Vector(size * -mFace.getModX(), 0, size * -mFace.getModZ()));
+			mMaximum.add(new Vector(0, font.getHeight(), 0));
 			break;
 		case Left:
-			mMaximum.add(new Vector(size * mFace.getModX(), 0, size * mFace.getModZ()));
+			mMaximum.add(new Vector(size * mFace.getModX(), font.getHeight(), size * mFace.getModZ()));
 			break;
 		}
+		
+		BlockVector min = new BlockVector(Math.min(mMinimum.getBlockX(), mMaximum.getBlockX()), mMinimum.getBlockY(), Math.min(mMinimum.getBlockZ(), mMaximum.getBlockZ()));
+		mMaximum = new BlockVector(Math.max(mMinimum.getBlockX(), mMaximum.getBlockX()), mMaximum.getBlockY(), Math.max(mMinimum.getBlockZ(), mMaximum.getBlockZ()));
+		mMinimum = min;
 	}
 	
 	public void setText(String text)

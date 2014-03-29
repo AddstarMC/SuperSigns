@@ -184,10 +184,11 @@ public class TextWriter
 	
 	public static BlockFace lookToFace(float yaw)
 	{
+		if(yaw <= -180)
+			yaw += 360;
+
 		if(yaw >= 180)
 			yaw -= 360;
-		
-		System.out.println(yaw);
 
 		if(yaw >= -45 && yaw <= 45)
 			return BlockFace.SOUTH;
@@ -195,7 +196,7 @@ public class TextWriter
 			return BlockFace.WEST;
 		else if(yaw > -135 && yaw < -45)
 			return BlockFace.EAST;
-		else // north
+		else
 			return BlockFace.NORTH;
 	}
 	
@@ -231,6 +232,7 @@ public class TextWriter
 			{
 				CharSet font = CharSet.load(file);
 				mFonts.put(font.getName(), font);
+				System.out.println("Loaded Font " + font.getName());
 			}
 			catch(IllegalArgumentException e)
 			{

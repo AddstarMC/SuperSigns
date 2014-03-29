@@ -11,6 +11,8 @@ import org.bukkit.entity.Player;
 
 import au.com.addstar.signmaker.CharSet;
 import au.com.addstar.signmaker.Justification;
+import au.com.addstar.signmaker.SignMakerPlugin;
+import au.com.addstar.signmaker.TextSign;
 import au.com.addstar.signmaker.TextWriter;
 
 public class WriteCommand implements ICommand
@@ -90,10 +92,17 @@ public class WriteCommand implements ICommand
 			text += args[i];
 		}
 		
-		BlockFace face = TextWriter.rotateRight(TextWriter.lookToFace(((Player)sender).getEyeLocation().getYaw()));
+		BlockFace face = TextWriter.rotateRight(TextWriter.lookToFace(((Player)sender).getLocation().getYaw()));
 		
 		sender.sendMessage(ChatColor.GREEN + "Creating text '" + text + "' at your location using justification " + justification.name() + " with font " + set.getName() + " using material " + material.name());
-		TextWriter.writeText(text, ((Player)sender).getLocation(), face, justification, set, material);
+		
+		TextSign temp = new TextSign(((Player)sender).getLocation(), face, set.getName());
+		temp.setMaterial(material);
+		temp.setJustification(justification);
+		temp.setText(text);
+		temp.redraw();
+
+		SignMakerPlugin.lastSign.put((Player)sender, temp);
 		
 		return true;
 	}
