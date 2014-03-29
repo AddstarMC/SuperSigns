@@ -8,5 +8,11 @@ commands:
   signmaker:
     usage: /<command> <font> <justification> <material> <text>
 
+permissions:
+  signmaker.write:
+    default: op
+    children:
+      signmaker.undo: true
 
-
+  signmaker.undo:
+    default: op
