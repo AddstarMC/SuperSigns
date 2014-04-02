@@ -101,6 +101,8 @@ public class CreateCommand implements ICommand
 				text += args[i];
 			}
 			
+			text = text.replaceAll("&v", "\n");
+			
 			sign.setFont(font);
 			sign.setMaterial(material);
 			sign.setText(text);

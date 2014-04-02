@@ -68,7 +68,9 @@ public class SetTextCommand implements ICommand
 				text += " ";
 			text += args[i];
 		}
-			
+		
+		text = text.replaceAll("&v", "\n");
+		
 		sign.setText(text);
 		
 		sign.redraw();

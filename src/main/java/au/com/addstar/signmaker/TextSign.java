@@ -64,6 +64,8 @@ public class TextSign
 		TextWriter.writeText(mText, mOrigin.toLocation(mWorld), mFace, mJustification, font, mMaterial);
 		
 		int size = TextWriter.getWidth(mText, font);
+		int height = TextWriter.getHeight(mText, font);
+		
 		mMinimum = mOrigin.clone();
 		mMaximum = mOrigin.clone();
 		
@@ -71,14 +73,14 @@ public class TextSign
 		{
 		case Center:
 			mMinimum.add(new Vector((size/2) * -mFace.getModX(), 0, (size/2) * -mFace.getModZ()));
-			mMaximum.add(new Vector((size - (size/2)) * mFace.getModX(), font.getHeight(), (size - (size/2)) * mFace.getModZ()));
+			mMaximum.add(new Vector((size - (size/2)) * mFace.getModX(), height, (size - (size/2)) * mFace.getModZ()));
 			break;
 		case Right:
 			mMinimum.add(new Vector(size * -mFace.getModX(), 0, size * -mFace.getModZ()));
-			mMaximum.add(new Vector(0, font.getHeight(), 0));
+			mMaximum.add(new Vector(0, height, 0));
 			break;
 		case Left:
-			mMaximum.add(new Vector(size * mFace.getModX(), font.getHeight(), size * mFace.getModZ()));
+			mMaximum.add(new Vector(size * mFace.getModX(), height, size * mFace.getModZ()));
 			break;
 		}
 		
