@@ -69,7 +69,7 @@ public class SetFontCommand implements ICommand
 		sign.setFont(font.getName());
 		
 		sign.redraw();
-		
+		plugin.saveSign(args[0]);
 		sender.sendMessage(ChatColor.GREEN + "Sign Edited");
 		return true;
 	}

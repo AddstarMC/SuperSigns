@@ -78,7 +78,7 @@ public class SetJustificationCommand implements ICommand
 		sign.setJustification(justification);
 		
 		sign.redraw();
-		
+		plugin.saveSign(args[0]);
 		sender.sendMessage(ChatColor.GREEN + "Sign Edited");
 		return true;
 	}

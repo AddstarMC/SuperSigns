@@ -109,6 +109,7 @@ public class CreateCommand implements ICommand
 		}
 		
 		plugin.addSign(args[0], sign);
+		plugin.saveSign(args[0]);
 		sender.sendMessage(ChatColor.GREEN + "Sign created");
 		return true;
 	}

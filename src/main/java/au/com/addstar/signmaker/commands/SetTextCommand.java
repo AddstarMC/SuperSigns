@@ -70,7 +70,7 @@ public class SetTextCommand implements ICommand
 		sign.setText(text);
 		
 		sign.redraw();
-		
+		plugin.saveSign(args[0]);
 		sender.sendMessage(ChatColor.GREEN + "Sign Edited");
 		return true;
 	}

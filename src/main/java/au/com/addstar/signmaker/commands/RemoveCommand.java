@@ -63,7 +63,7 @@ public class RemoveCommand implements ICommand
 		sign.clear();
 		
 		plugin.removeSign(args[0]);
-		
+		plugin.saveSign(args[0]);
 		sender.sendMessage(ChatColor.GOLD + "Sign Removed");
 		return true;
 	}

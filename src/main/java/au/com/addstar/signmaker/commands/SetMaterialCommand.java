@@ -68,7 +68,7 @@ public class SetMaterialCommand implements ICommand
 		sign.setMaterial(material);
 		
 		sign.redraw();
-		
+		plugin.saveSign(args[0]);
 		sender.sendMessage(ChatColor.GREEN + "Sign Edited");
 		return true;
 	}

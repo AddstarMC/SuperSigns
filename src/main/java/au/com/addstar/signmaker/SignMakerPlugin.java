@@ -76,6 +76,25 @@ public class SignMakerPlugin extends JavaPlugin
 		return mSigns.get(name.toLowerCase());
 	}
 	
+	public void saveSign(String name)
+	{
+		TextSign sign = getSign(name);
+		File file = new File(mSignFolder, name);
+		if(sign == null)
+			file.delete();
+		else
+		{
+			try
+			{
+				sign.save(file);
+			}
+			catch ( IOException e )
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	private static File mFontFolder;
 	public static File getFontFolder()
 	{
