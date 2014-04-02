@@ -54,11 +54,19 @@ public class UndoCommand implements ICommand
 			return false;
 		
 		TextSign sign = SignMakerPlugin.lastSign.remove(sender);
+		String name = SignMakerPlugin.lastSignName.remove(sender);
 		
 		if(sign == null)
 			throw new IllegalArgumentException("You have nothing to undo");
 		
 		sign.clear();
+		
+		if(name != null)
+		{
+			SignMakerPlugin.instance.removeSign(name);
+			SignMakerPlugin.instance.saveSign(name);
+		}
+		
 		sender.sendMessage(ChatColor.GREEN + "Last sign undone");
 		
 		return true;

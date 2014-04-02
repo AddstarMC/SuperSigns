@@ -6,9 +6,21 @@ main: au.com.addstar.signmaker.SignMakerPlugin
 
 commands:
   signmaker:
-    usage: /<command> <font> <justification> <material> <text>
 
 permissions:
+  signmaker.*:
+    default: op
+    children:
+      signmaker.write: true
+      signmaker.undo: true
+      signmaker.create: true
+      signmaker.remove: true
+      signmaker.set.text: true
+      signmaker.set.font: true
+      signmaker.set.justification: true
+      signmaker.set.material: true
+      signmaker.redraw: true
+      
   signmaker.write:
     default: op
     children:
@@ -21,6 +33,8 @@ permissions:
     default: op
     children:
       signmaker.undo: true
+  signmaker.remove:
+    default: op
 
   signmaker.set.text:
     default: op
@@ -31,6 +45,4 @@ permissions:
   signmaker.set.material:
     default: op
   signmaker.redraw:
-    default: op
-  signmaker.remove:
     default: op

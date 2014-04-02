@@ -139,13 +139,20 @@ public class TextSign
 	
 	public void save(ConfigurationSection section)
 	{
-		section.set("text", mText);
+		if(mText != null)
+			section.set("text", mText);
 		section.set("world", mWorld.getName());
 		
-		section.set("material", mMaterial.name());
+		if(mMaterial != null)
+			section.set("material", mMaterial.name());
+		
 		section.set("face", mFace.name());
-		section.set("justification", mJustification.name());
-		section.set("font", mFont);
+		
+		if(mJustification != null)
+			section.set("justification", mJustification.name());
+		
+		if(mFont != null)
+			section.set("font", mFont);
 		
 		section.set("origin", mOrigin);
 		section.set("min", mMinimum);
@@ -168,11 +175,15 @@ public class TextSign
 		sign.mMinimum = (BlockVector)section.get("min");
 		sign.mMaximum = (BlockVector)section.get("max");
 		
-		sign.setText(section.getString("text"));
-		sign.setMaterial(Material.valueOf(section.getString("material")));
+		if(section.isString("text"))
+			sign.setText(section.getString("text"));
+		if(section.isString("material"))
+			sign.setMaterial(Material.valueOf(section.getString("material")));
 		sign.setFacing(BlockFace.valueOf(section.getString("face")));
-		sign.setJustification(Justification.valueOf(section.getString("justification")));
-		sign.setFont(section.getString("font"));
+		if(section.isString("justification"))
+			sign.setJustification(Justification.valueOf(section.getString("justification")));
+		if(section.isString("font"))
+			sign.setFont(section.getString("font"));
 		
 		return sign;
 	}

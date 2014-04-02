@@ -110,6 +110,10 @@ public class CreateCommand implements ICommand
 		
 		plugin.addSign(args[0], sign);
 		plugin.saveSign(args[0]);
+		
+		SignMakerPlugin.lastSign.put((Player)sender, sign);
+		SignMakerPlugin.lastSignName.put((Player)sender, args[0]);
+		
 		sender.sendMessage(ChatColor.GREEN + "Sign created");
 		return true;
 	}

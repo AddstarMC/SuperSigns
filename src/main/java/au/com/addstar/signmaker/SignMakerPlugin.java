@@ -17,6 +17,7 @@ public class SignMakerPlugin extends JavaPlugin
 	private File mSignFolder;
 	
 	public static WeakHashMap<Player, TextSign> lastSign = new WeakHashMap<Player, TextSign>();
+	public static WeakHashMap<Player, String> lastSignName = new WeakHashMap<Player, String>();
 	
 	public static SignMakerPlugin instance;
 	

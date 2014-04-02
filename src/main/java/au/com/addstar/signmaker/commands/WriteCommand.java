@@ -103,6 +103,7 @@ public class WriteCommand implements ICommand
 		temp.redraw();
 
 		SignMakerPlugin.lastSign.put((Player)sender, temp);
+		SignMakerPlugin.lastSignName.remove((Player)sender);
 		
 		return true;
 	}
