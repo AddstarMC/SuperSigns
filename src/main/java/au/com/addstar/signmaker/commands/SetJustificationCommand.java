@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import au.com.addstar.signmaker.Justification;
 import au.com.addstar.signmaker.SignMakerPlugin;
@@ -79,7 +80,8 @@ public class SetJustificationCommand implements ICommand
 		
 		sign.redraw();
 		plugin.saveSign(args[0]);
-		sender.sendMessage(ChatColor.GREEN + "Sign Edited");
+		if(sender instanceof Player)
+			sender.sendMessage(ChatColor.GREEN + "Sign Edited");
 		return true;
 	}
 
