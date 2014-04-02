@@ -1,4 +1,4 @@
-name: SignMaker
+name: SuperSigns
 version: ${build.version}
 author: Schmoller
 
@@ -6,6 +6,7 @@ main: au.com.addstar.signmaker.SignMakerPlugin
 
 commands:
   signmaker:
+    aliases: [supersigns,ssigns]
 
 permissions:
   signmaker.*:
