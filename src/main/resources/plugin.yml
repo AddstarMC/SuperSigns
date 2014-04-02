@@ -16,3 +16,21 @@ permissions:
 
   signmaker.undo:
     default: op
+    
+  signmaker.create:
+    default: op
+    children:
+      signmaker.undo: true
+
+  signmaker.set.text:
+    default: op
+  signmaker.set.font:
+    default: op
+  signmaker.set.justification:
+    default: op
+  signmaker.set.material:
+    default: op
+  signmaker.redraw:
+    default: op
+  signmaker.remove:
+    default: op

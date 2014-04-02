@@ -18,9 +18,13 @@ public class SignMakerPlugin extends JavaPlugin
 	
 	public static WeakHashMap<Player, TextSign> lastSign = new WeakHashMap<Player, TextSign>();
 	
+	public static SignMakerPlugin instance;
+	
 	@Override
 	public void onEnable()
 	{
+		instance = this;
+		
 		mFontFolder = new File(getDataFolder(), "fonts");
 		mFontFolder.mkdirs();
 		
@@ -55,6 +59,21 @@ public class SignMakerPlugin extends JavaPlugin
 				getLogger().warning(e.getMessage());
 			}
 		}
+	}
+	
+	public void addSign(String name, TextSign sign)
+	{
+		mSigns.put(name.toLowerCase(), sign);
+	}
+	
+	public void removeSign(String name)
+	{
+		mSigns.remove(name.toLowerCase());
+	}
+	
+	public TextSign getSign(String name)
+	{
+		return mSigns.get(name.toLowerCase());
 	}
 	
 	private static File mFontFolder;

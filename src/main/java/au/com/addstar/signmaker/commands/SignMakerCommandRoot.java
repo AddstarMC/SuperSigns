@@ -7,5 +7,13 @@ public class SignMakerCommandRoot extends RootCommandDispatcher
 		super("Allows you to create and remove text signs;");
 		registerCommand(new WriteCommand());
 		registerCommand(new UndoCommand());
+		
+		registerCommand(new CreateCommand());
+		registerCommand(new RedrawCommand());
+		registerCommand(new RemoveCommand());
+		registerCommand(new SetFontCommand());
+		registerCommand(new SetJustificationCommand());
+		registerCommand(new SetMaterialCommand());
+		registerCommand(new SetTextCommand());
 	}
 }

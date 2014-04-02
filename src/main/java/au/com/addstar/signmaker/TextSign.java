@@ -58,7 +58,7 @@ public class TextSign
 		clear();
 		
 		CharSet font = TextWriter.getFont(mFont);
-		if(font == null)
+		if(font == null || mMaterial == null || mText == null || mJustification == null)
 			return;
 		
 		TextWriter.writeText(mText, mOrigin.toLocation(mWorld), mFace, mJustification, font, mMaterial);
