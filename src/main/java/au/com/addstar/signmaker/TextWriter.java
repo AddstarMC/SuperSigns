@@ -1,7 +1,10 @@
 package au.com.addstar.signmaker;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -244,6 +247,49 @@ public class TextWriter
 				System.out.println("Failed to load font " + file.getPath());
 				e.printStackTrace();
 			}
+		}
+		
+		SignMakerPlugin plugin = SignMakerPlugin.instance;
+		
+		InputStream fontsList = plugin.getResource("fonts.txt");
+		if(fontsList == null)
+			return;
+		
+		// Load internal fonts
+		BufferedReader reader = new BufferedReader(new InputStreamReader(fontsList));
+		
+		try
+		{
+			while(reader.ready())
+			{
+				String line = reader.readLine();
+				String path = "fonts/" + line;
+				InputStream fontFile = plugin.getResource(path);
+				if(fontFile == null)
+				{
+					plugin.getLogger().warning("Font " + line + " was specified in the font list but was not found in the jar");
+					continue;
+				}
+				
+				try
+				{
+					CharSet font = CharSet.load(fontFile);
+					if(!mFonts.containsKey(font.getName()))
+					{
+						mFonts.put(font.getName(), font);
+						System.out.println("Loaded Font " + font.getName());
+					}
+				}
+				catch(IllegalArgumentException e)
+				{
+					System.out.println("Failed to load internal font " + path);
+					System.out.println(e.getMessage());
+				}
+			}
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
 		}
 	}
 }
