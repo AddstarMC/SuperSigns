@@ -46,7 +46,7 @@ public class SignMakerPlugin extends JavaPlugin
 		{
 			try
 			{
-				mSigns.put(file.getName(), TextSign.load(file));
+				mSigns.put(file.getName().toLowerCase(), TextSign.load(file));
 			}
 			catch(IOException e)
 			{
