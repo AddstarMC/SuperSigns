@@ -2,7 +2,10 @@ package au.com.addstar.signmaker;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.WeakHashMap;
 
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -96,9 +99,28 @@ public class SignMakerPlugin extends JavaPlugin
 		}
 	}
 	
+	public Collection<String> getSignNames()
+	{
+		return mSigns.keySet();
+	}
+	
 	private static File mFontFolder;
 	public static File getFontFolder()
 	{
 		return mFontFolder;
+	}
+	
+	public static List<String> matchString(String string, Collection<String> strings)
+	{
+		ArrayList<String> matches = new ArrayList<String>();
+		string = string.toLowerCase();
+		
+		for(String s : strings)
+		{
+			if(s.toLowerCase().startsWith(string))
+				matches.add(s);
+		}
+		
+		return matches;
 	}
 }

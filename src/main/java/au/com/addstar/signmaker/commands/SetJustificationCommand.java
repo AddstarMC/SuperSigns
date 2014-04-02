@@ -86,6 +86,11 @@ public class SetJustificationCommand implements ICommand
 	@Override
 	public List<String> onTabComplete( CommandSender sender, String parent, String label, String[] args )
 	{
+		if(args.length == 1)
+			return SignMakerPlugin.matchString(args[0], SignMakerPlugin.instance.getSignNames());
+		else if(args.length == 2)
+			return SignMakerPlugin.matchString(args[1], Justification.names);
+		
 		return null;
 	}
 

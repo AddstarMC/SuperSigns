@@ -15,5 +15,6 @@ public class SignMakerCommandRoot extends RootCommandDispatcher
 		registerCommand(new SetJustificationCommand());
 		registerCommand(new SetMaterialCommand());
 		registerCommand(new SetTextCommand());
+		registerCommand(new ListFontsCommand());
 	}
 }

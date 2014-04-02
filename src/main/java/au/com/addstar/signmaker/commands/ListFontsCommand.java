@@ -7,17 +7,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import au.com.addstar.signmaker.CharSet;
-import au.com.addstar.signmaker.SignMakerPlugin;
-import au.com.addstar.signmaker.TextSign;
 import au.com.addstar.signmaker.TextWriter;
 
-public class SetFontCommand implements ICommand
+public class ListFontsCommand implements ICommand
 {
-
 	@Override
 	public String getName()
 	{
-		return "font";
+		return "fonts";
 	}
 
 	@Override
@@ -29,19 +26,19 @@ public class SetFontCommand implements ICommand
 	@Override
 	public String getPermission()
 	{
-		return "signmaker.set.font";
+		return "signmaker.list.fonts";
 	}
 
 	@Override
 	public String getUsageString( String label, CommandSender sender )
 	{
-		return label + " <name> <font>";
+		return label;
 	}
 
 	@Override
 	public String getDescription()
 	{
-		return "Sets the font on the sign.";
+		return "Lists all fonts available";
 	}
 
 	@Override
@@ -53,35 +50,25 @@ public class SetFontCommand implements ICommand
 	@Override
 	public boolean onCommand( CommandSender sender, String parent, String label, String[] args ) throws BadArgumentException
 	{
-		if(args.length != 2)
+		if(args.length != 0)
 			return false;
 		
-		SignMakerPlugin plugin = SignMakerPlugin.instance;
+		List<String> fontNames = TextWriter.getFonts();
 		
-		TextSign sign = plugin.getSign(args[0]);
-		if(sign == null)
-			throw new BadArgumentException(0, "That sign does not exist");
+		sender.sendMessage(ChatColor.GOLD + "Fonts available: " + ChatColor.RED + fontNames.size());
 		
-		CharSet font = TextWriter.getFont(args[1]);
-		if(font == null)
-			throw new BadArgumentException(1, "Unknown font");
-			
-		sign.setFont(font.getName());
+		for(String fontName : fontNames)
+		{
+			CharSet font = TextWriter.getFont(fontName);
+			sender.sendMessage(ChatColor.GRAY + " " + fontName + " " + ChatColor.YELLOW + "height: " + ChatColor.GRAY + font.getHeight() + ChatColor.YELLOW);
+		}
 		
-		sign.redraw();
-		plugin.saveSign(args[0]);
-		sender.sendMessage(ChatColor.GREEN + "Sign Edited");
 		return true;
 	}
 
 	@Override
 	public List<String> onTabComplete( CommandSender sender, String parent, String label, String[] args )
 	{
-		if(args.length == 1)
-			return SignMakerPlugin.matchString(args[0], SignMakerPlugin.instance.getSignNames());
-		else if(args.length == 2)
-			return SignMakerPlugin.matchString(args[1], TextWriter.getFonts());
-		
 		return null;
 	}
 

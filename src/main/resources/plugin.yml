@@ -46,3 +46,6 @@ permissions:
     default: op
   signmaker.redraw:
     default: op
+  
+  signmaker.list.fonts:
+    default: op

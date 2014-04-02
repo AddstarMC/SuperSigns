@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.Validate;
@@ -223,7 +224,7 @@ public class TextWriter
 	
 	public static CharSet getFont(String name)
 	{
-		return mFonts.get(name);
+		return mFonts.get(name.toLowerCase());
 	}
 	
 	public static void reloadFonts()
@@ -234,7 +235,7 @@ public class TextWriter
 			try
 			{
 				CharSet font = CharSet.load(file);
-				mFonts.put(font.getName(), font);
+				mFonts.put(font.getName().toLowerCase(), font);
 				System.out.println("Loaded Font " + font.getName());
 			}
 			catch(IllegalArgumentException e)
@@ -276,7 +277,7 @@ public class TextWriter
 					CharSet font = CharSet.load(fontFile);
 					if(!mFonts.containsKey(font.getName()))
 					{
-						mFonts.put(font.getName(), font);
+						mFonts.put(font.getName().toLowerCase(), font);
 						System.out.println("Loaded Font " + font.getName());
 					}
 				}
@@ -291,5 +292,14 @@ public class TextWriter
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	public static List<String> getFonts()
+	{
+		ArrayList<String> fonts = new ArrayList<String>(mFonts.size());
+		for(CharSet font : mFonts.values())
+			fonts.add(font.getName());
+		
+		return fonts;
 	}
 }

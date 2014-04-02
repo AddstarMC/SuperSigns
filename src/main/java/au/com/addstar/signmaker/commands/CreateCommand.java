@@ -121,6 +121,11 @@ public class CreateCommand implements ICommand
 	@Override
 	public List<String> onTabComplete( CommandSender sender, String parent, String label, String[] args )
 	{
+		if(args.length == 2)
+			return SignMakerPlugin.matchString(args[1], Justification.names);
+		else if(args.length == 3)
+			return SignMakerPlugin.matchString(args[2], TextWriter.getFonts());
+		
 		return null;
 	}
 

@@ -71,6 +71,9 @@ public class RemoveCommand implements ICommand
 	@Override
 	public List<String> onTabComplete( CommandSender sender, String parent, String label, String[] args )
 	{
+		if(args.length == 1)
+			return SignMakerPlugin.matchString(args[0], SignMakerPlugin.instance.getSignNames());
+		
 		return null;
 	}
 
