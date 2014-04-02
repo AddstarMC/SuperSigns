@@ -46,7 +46,7 @@ public class SetJustificationCommand implements ICommand
 	@Override
 	public EnumSet<CommandSenderType> getAllowedSenders()
 	{
-		return EnumSet.of(CommandSenderType.Player);
+		return EnumSet.allOf(CommandSenderType.class);
 	}
 
 	@Override
