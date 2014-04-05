@@ -13,9 +13,7 @@ import java.util.Map;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 import org.bukkit.material.MaterialData;
 import org.bukkit.material.Stairs;
 import org.bukkit.material.Step;
@@ -57,6 +55,48 @@ public class TextWriter
 	
 	public static void writeText(String text, Location location, BlockFace face, Justification justification, CharSet set, Material material)
 	{
+		for(StoredBlocks blocks : makeText(text, location, face, justification, set, material))
+			blocks.apply();
+	}
+	
+	public static StoredBlocks[] makeText(String text, Location location, BlockFace face, Justification justification, CharSet set, Material material)
+	{
+		String[] lines = text.split("\n");
+		StoredBlocks[] lineBlocks = new StoredBlocks[lines.length];
+		
+		int yOffset = (lines.length - 1) * (set.getHeight() + 1);
+		int index = 0;
+		
+		for(String line : lines)
+		{
+			StoredBlocks blocks = makeText(line, face, set, material);
+			Location loc = location.clone();
+			
+			switch(justification)
+			{
+			case Center:
+				loc.add((blocks.getWidth()/2) * -face.getModX(), 0, (blocks.getWidth()/2) * -face.getModZ());
+				break;
+			case Right:
+				loc.add(blocks.getWidth() * -face.getModX(), 0, blocks.getWidth() * -face.getModZ());
+				break;
+			case Left:
+				break;
+			}
+			
+			loc.add(0, yOffset, 0);
+			blocks.setLocation(loc);
+			
+			lineBlocks[index++] = blocks;
+			
+			yOffset -= 1 + set.getHeight();
+		}
+		
+		return lineBlocks;
+	}
+	
+	public static StoredBlocks makeText(String text, BlockFace face, CharSet set, Material material)
+	{
 		Validate.isTrue(face == BlockFace.EAST || face == BlockFace.WEST || face == BlockFace.NORTH || face == BlockFace.SOUTH, "Can only use North, East, South, or West direction.");
 		CharDef space = set.getChar(' ');
 		
@@ -66,64 +106,36 @@ public class TextWriter
 		for(BlockType type : BlockType.values())
 			types[index++] = mapBlockType(type, face, material);
 		
-		String[] lines = text.split("\n");
-		
-		int yOffset = (lines.length - 1) * (set.getHeight() + 1);
-		
-		for(String line : lines)
+		CharDef[] chars = new CharDef[text.length()];
+			
+		int size = 0;
+		for(int i = 0; i < text.length(); ++i)
 		{
-			CharDef[] chars = new CharDef[line.length()];
+			CharDef ch = set.getChar(text.charAt(i));
+			if(ch == null)
+				ch = space;
 			
-			int size = 0;
-			for(int i = 0; i < line.length(); ++i)
-			{
-				CharDef ch = set.getChar(line.charAt(i));
-				if(ch == null)
-					ch = space;
-				
-				size += ch.getWidth() + 1;
-				chars[i] = ch;
-			}
-			
-			Location loc = location.clone();
-			
-			switch(justification)
-			{
-			case Center:
-				loc.add((size/2) * -face.getModX(), 0, (size/2) * -face.getModZ());
-				break;
-			case Right:
-				loc.add(size * -face.getModX(), 0, size * -face.getModZ());
-				break;
-			case Left:
-				break;
-			}
-			
-			int offset = 0;
-			
-			for(int i = 0; i < chars.length; ++i)
-			{
-				CharDef ch = chars[i];
-				
-				for(int x = 0; x < ch.getWidth(); ++x)
-				{
-					for(int y = 0; y < set.getHeight(); ++y)
-					{
-						Block block = loc.getWorld().getBlockAt(loc.getBlockX() + face.getModX() * (offset + x), loc.getBlockY() + y + yOffset, loc.getBlockZ() + face.getModZ() * (offset + x));
-						
-						BlockState state = block.getState();
-						MaterialData data = types[ch.getType(x, y).ordinal()];
-						state.setType(data.getItemType());
-						state.setData(data);
-						state.update(true);
-					}
-				}
-				
-				offset += ch.getWidth() + 1;
-			}
-			
-			yOffset -= 1 + set.getHeight();
+			size += ch.getWidth() + 1;
+			chars[i] = ch;
 		}
+		
+		int offset = 0;
+		StoredBlocks blocks = new StoredBlocks(size, set.getHeight(), face);
+		
+		for(int i = 0; i < chars.length; ++i)
+		{
+			CharDef ch = chars[i];
+			
+			for(int x = 0; x < ch.getWidth(); ++x)
+			{
+				for(int y = 0; y < set.getHeight(); ++y)
+					blocks.setBlock(offset + x, y, types[ch.getType(x, y).ordinal()].clone());
+			}
+			
+			offset += ch.getWidth() + 1;
+		}
+		
+		return blocks;
 	}
 	
 	private static Material getStairMaterial(Material material)
