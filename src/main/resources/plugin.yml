@@ -21,6 +21,7 @@ permissions:
       signmaker.set.justification: true
       signmaker.set.material: true
       signmaker.redraw: true
+      signmaker.transition: true
       
   signmaker.write:
     default: op
@@ -46,6 +47,9 @@ permissions:
   signmaker.set.material:
     default: op
   signmaker.redraw:
+    default: op
+  
+  signmaker.transition:
     default: op
   
   signmaker.list.fonts:

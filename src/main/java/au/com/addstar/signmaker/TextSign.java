@@ -27,6 +27,8 @@ public class TextSign
 	private String mFont;
 	private String mText;
 	
+	private TransitionRunner mCurrentTransition;
+	
 	private TextSign() {}
 	public TextSign(Location location, BlockFace face, String font)
 	{
@@ -137,6 +139,21 @@ public class TextSign
 	public BlockFace getFacing()
 	{
 		return mFace;
+	}
+	
+	public Location getOrigin()
+	{
+		return mOrigin.toLocation(mWorld);
+	}
+	
+	void setCurrentTransition(TransitionRunner runner)
+	{
+		mCurrentTransition = runner;
+	}
+	
+	public TransitionRunner getCurrentTransition()
+	{
+		return mCurrentTransition;
 	}
 	
 	public void save(ConfigurationSection section)

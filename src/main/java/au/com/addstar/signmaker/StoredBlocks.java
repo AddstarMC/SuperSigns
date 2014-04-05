@@ -47,6 +47,11 @@ public class StoredBlocks
 		return mLocation;
 	}
 	
+	public BlockFace getFacing()
+	{
+		return mFacing;
+	}
+	
 	public MaterialData getBlock(int x, int y)
 	{
 		return mBlocks[x + y * mWidth];
