@@ -9,7 +9,7 @@ import org.bukkit.material.MaterialData;
 
 import au.com.addstar.signmaker.StoredBlocks;
 
-public class VScroll implements Transition
+public class Cover implements Transition
 {
 	private StoredBlocks[] mOld;
 	private StoredBlocks[] mNew;
@@ -20,7 +20,7 @@ public class VScroll implements Transition
 	private int mTotal;
 	private boolean mUp;
 	
-	public VScroll(boolean up)
+	public Cover(boolean up)
 	{
 		mOffset = 0;
 		mUp = up;
@@ -69,7 +69,9 @@ public class VScroll implements Transition
 			StoredBlocks old = (l < mOld.length ? mOld[l] : null);
 			StoredBlocks current = (l < mNew.length ? mNew[l] : null);
 			
-			// Draw old
+			int width = (old != null ? old.getWidth() : 0);
+			width = Math.max(width, (current != null ? current.getWidth() : 0));
+			
 			if(old != null)
 			{
 				int dstX = old.getLocation().getBlockX();
@@ -81,41 +83,11 @@ public class VScroll implements Transition
 				{
 					if(mUp)
 					{
-						for(int y = 0; y < old.getHeight() - mOffset; ++y)
-						{
-							MaterialData data = old.getBlock(x, y);
-							Block dest = mWorld.getBlockAt(dstX + (x * face.getModX()), dstY + y + mOffset, dstZ + (x * face.getModZ()));
-							if(data == null || data.getItemType() == Material.AIR)
-								dest.setType(Material.AIR);
-							else
-							{
-								dest.setType(data.getItemType());
-								BlockState state = dest.getState();
-								state.setData(data);
-								state.update(true);
-							}
-						}
-						
 						Block dest = mWorld.getBlockAt(dstX + (x * face.getModX()), dstY + (mOffset-1), dstZ + (x * face.getModZ()));
 						dest.setType(Material.AIR);
 					}
 					else
 					{
-						for(int y = mOffset; y < old.getHeight(); ++y)
-						{
-							MaterialData data = old.getBlock(x, y);
-							Block dest = mWorld.getBlockAt(dstX + (x * face.getModX()), dstY + (y - mOffset), dstZ + (x * face.getModZ()));
-							if(data == null || data.getItemType() == Material.AIR)
-								dest.setType(Material.AIR);
-							else
-							{
-								dest.setType(data.getItemType());
-								BlockState state = dest.getState();
-								state.setData(data);
-								state.update(true);
-							}
-						}
-						
 						Block dest = mWorld.getBlockAt(dstX + (x * face.getModX()), dstY + (old.getHeight() - mOffset), dstZ + (x * face.getModZ()));
 						dest.setType(Material.AIR);
 					}

@@ -3,6 +3,7 @@ package au.com.addstar.signmaker;
 import java.util.ArrayList;
 import java.util.List;
 
+import au.com.addstar.signmaker.transitions.Cover;
 import au.com.addstar.signmaker.transitions.Transition;
 import au.com.addstar.signmaker.transitions.VScroll;
 
@@ -10,7 +11,9 @@ public enum TransitionType
 {
 	None,
 	ScrollDown,
-	ScrollUp;
+	ScrollUp,
+	CoverDown,
+	CoverUp;
 	
 	public static final List<String> names;
 	
@@ -29,6 +32,10 @@ public enum TransitionType
 			return new VScroll(false);
 		case ScrollUp:
 			return new VScroll(true);
+		case CoverDown:
+			return new Cover(false);
+		case CoverUp:
+			return new Cover(true);
 		default:
 			return null;
 		}
