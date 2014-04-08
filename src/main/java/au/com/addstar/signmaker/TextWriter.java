@@ -115,9 +115,12 @@ public class TextWriter
 			if(ch == null)
 				ch = space;
 			
-			size += ch.getWidth() + 1;
+			if(i != 0)
+				++size;
+			size += ch.getWidth();
 			chars[i] = ch;
 		}
+		
 		
 		int offset = 0;
 		StoredBlocks blocks = new StoredBlocks(size, set.getHeight(), face);
