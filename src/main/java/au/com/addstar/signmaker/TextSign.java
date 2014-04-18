@@ -17,6 +17,7 @@ import org.bukkit.util.Vector;
 public class TextSign
 {
 	private World mWorld;
+	private String mWorldName;
 	private BlockVector mMinimum;
 	private BlockVector mMaximum;
 	private BlockVector mOrigin;
@@ -34,12 +35,16 @@ public class TextSign
 	{
 		mOrigin = new BlockVector(location.getBlockX(), location.getBlockY(), location.getBlockZ());
 		mWorld = location.getWorld();
+		mWorldName = mWorld.getName();
 		mFace = face;
 		mFont = font;
 	}
 	
 	public void clear()
 	{
+		if(getWorld() == null)
+			return;
+		
 		if(mMinimum == null)
 			return;
 		
@@ -57,6 +62,9 @@ public class TextSign
 	
 	public void redraw()
 	{
+		if(getWorld() == null)
+			return;
+		
 		clear();
 		
 		CharSet font = TextWriter.getFont(mFont);
@@ -143,7 +151,15 @@ public class TextSign
 	
 	public Location getOrigin()
 	{
-		return mOrigin.toLocation(mWorld);
+		return mOrigin.toLocation(getWorld());
+	}
+	
+	public World getWorld()
+	{
+		if(mWorld == null)
+			mWorld = Bukkit.getWorld(mWorldName);
+		
+		return mWorld;
 	}
 	
 	void setCurrentTransition(TransitionRunner runner)
@@ -160,7 +176,7 @@ public class TextSign
 	{
 		if(mText != null)
 			section.set("text", mText);
-		section.set("world", mWorld.getName());
+		section.set("world", mWorldName);
 		
 		if(mMaterial != null)
 			section.set("material", mMaterial.name());
@@ -189,7 +205,8 @@ public class TextSign
 	{
 		TextSign sign = new TextSign();
 		
-		sign.mWorld = Bukkit.getWorld(section.getString("world"));
+		sign.mWorldName = section.getString("world");
+		sign.mWorld = Bukkit.getWorld(sign.mWorldName);
 		sign.mOrigin = (BlockVector)section.get("origin");
 		sign.mMinimum = (BlockVector)section.get("min");
 		sign.mMaximum = (BlockVector)section.get("max");

@@ -56,7 +56,7 @@ public class WriteCommand implements ICommand
 	@Override
 	public boolean onCommand( CommandSender sender, String parent, String label, String[] args ) throws BadArgumentException
 	{
-		if(args.length != 4)
+		if(args.length < 4)
 			return false;
 		
 		CharSet set = TextWriter.getFont(args[0]);
