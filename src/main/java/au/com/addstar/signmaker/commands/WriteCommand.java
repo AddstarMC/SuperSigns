@@ -92,6 +92,8 @@ public class WriteCommand implements ICommand
 			text += args[i];
 		}
 		
+		text = text.replaceAll("&v", "\n");
+		
 		BlockFace face = TextWriter.rotateRight(TextWriter.lookToFace(((Player)sender).getLocation().getYaw()));
 		
 		sender.sendMessage(ChatColor.GREEN + "Creating text '" + text + "' at your location using justification " + justification.name() + " with font " + set.getName() + " using material " + material.name());
