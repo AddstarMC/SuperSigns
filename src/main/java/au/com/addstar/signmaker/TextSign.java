@@ -11,6 +11,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.material.MaterialData;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
 
@@ -22,7 +23,7 @@ public class TextSign
 	private BlockVector mMaximum;
 	private BlockVector mOrigin;
 	
-	private Material mMaterial;
+	private MaterialData mMaterial;
 	private BlockFace mFace;
 	private Justification mJustification;
 	private String mFont;
@@ -109,12 +110,12 @@ public class TextSign
 		return mText;
 	}
 	
-	public void setMaterial(Material material)
+	public void setMaterial(MaterialData material)
 	{
 		mMaterial = material;
 	}
 	
-	public Material getMaterial()
+	public MaterialData getMaterial()
 	{
 		return mMaterial;
 	}
@@ -179,7 +180,10 @@ public class TextSign
 		section.set("world", mWorldName);
 		
 		if(mMaterial != null)
-			section.set("material", mMaterial.name());
+		{
+			section.set("material", mMaterial.getItemType().name());
+			section.set("materialdata", mMaterial.getData());
+		}
 		
 		section.set("face", mFace.name());
 		
@@ -214,7 +218,14 @@ public class TextSign
 		if(section.isString("text"))
 			sign.setText(section.getString("text"));
 		if(section.isString("material"))
-			sign.setMaterial(Material.valueOf(section.getString("material")));
+		{
+			Material mat = Material.valueOf(section.getString("material"));
+			int data = 0;
+			if (section.isInt("materialdata"))
+				data = section.getInt("materialdata");
+			
+			sign.setMaterial(mat.getNewData((byte)data));
+		}
 		sign.setFacing(BlockFace.valueOf(section.getString("face")));
 		if(section.isString("justification"))
 			sign.setJustification(Justification.valueOf(section.getString("justification")));

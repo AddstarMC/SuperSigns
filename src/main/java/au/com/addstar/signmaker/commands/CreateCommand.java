@@ -86,11 +86,20 @@ public class CreateCommand implements ICommand
 			if(TextWriter.getFont(font) == null)
 				throw new BadArgumentException(2, "Unknown font");
 			
-			Material material = Material.valueOf(args[3].toUpperCase());
-			if(material == null)
+			Material type;
+			int data = 0;
+			if (args[3].contains(":"))
+			{
+				type = Material.valueOf(args[3].split(":", 2)[0].toUpperCase());
+				data = Integer.parseInt(args[3].split(":", 2)[1]);
+			}
+			else
+				type = Material.valueOf(args[3].toUpperCase());
+			
+			if(type == null)
 				throw new BadArgumentException(3, "Unknown material " + args[3]);
 			
-			if(!material.isBlock() || material.hasGravity() || !material.isSolid())
+			if(!type.isBlock() || type.hasGravity() || !type.isSolid())
 				throw new BadArgumentException(3, "Material cannot be an item, a block that falls under gravity, or not a full block");
 			
 			String text = "";
@@ -104,7 +113,7 @@ public class CreateCommand implements ICommand
 			text = text.replaceAll("&v", "\n");
 			
 			sign.setFont(font);
-			sign.setMaterial(material);
+			sign.setMaterial(type.getNewData((byte)data));
 			sign.setText(text);
 			
 			sign.redraw();

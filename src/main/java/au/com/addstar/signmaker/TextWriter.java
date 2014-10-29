@@ -53,13 +53,13 @@ public class TextWriter
 		return set.getHeight() + (lines - 1) * (set.getHeight() + 1);
 	}
 	
-	public static void writeText(String text, Location location, BlockFace face, Justification justification, CharSet set, Material material)
+	public static void writeText(String text, Location location, BlockFace face, Justification justification, CharSet set, MaterialData material)
 	{
 		for(StoredBlocks blocks : makeText(text, location, face, justification, set, material))
 			blocks.apply();
 	}
 	
-	public static StoredBlocks[] makeText(String text, Location location, BlockFace face, Justification justification, CharSet set, Material material)
+	public static StoredBlocks[] makeText(String text, Location location, BlockFace face, Justification justification, CharSet set, MaterialData material)
 	{
 		String[] lines = text.split("\n");
 		StoredBlocks[] lineBlocks = new StoredBlocks[lines.length];
@@ -95,7 +95,7 @@ public class TextWriter
 		return lineBlocks;
 	}
 	
-	public static StoredBlocks makeText(String text, BlockFace face, CharSet set, Material material)
+	public static StoredBlocks makeText(String text, BlockFace face, CharSet set, MaterialData material)
 	{
 		Validate.isTrue(face == BlockFace.EAST || face == BlockFace.WEST || face == BlockFace.NORTH || face == BlockFace.SOUTH, "Can only use North, East, South, or West direction.");
 		CharDef space = set.getChar(' ');
@@ -141,9 +141,9 @@ public class TextWriter
 		return blocks;
 	}
 	
-	private static Material getStairMaterial(Material material)
+	private static Material getStairMaterial(MaterialData material)
 	{
-		switch(material)
+		switch(material.getItemType())
 		{
 		case COBBLESTONE:
 			return Material.COBBLESTONE_STAIRS;
@@ -162,20 +162,20 @@ public class TextWriter
 		}
 	}
 	
-	private static MaterialData getSlabMaterial(Material material)
+	private static MaterialData getSlabMaterial(MaterialData material)
 	{
-		switch(material)
+		switch(material.getItemType())
 		{
 		case COBBLESTONE:
-			return new Step(material);
+			return new Step(material.getItemType());
 		case SMOOTH_BRICK:
-			return new Step(material);
+			return new Step(material.getItemType());
 		case BRICK:
-			return new Step(material);
+			return new Step(material.getItemType());
 		case WOOD:
 			return new WoodenStep();
 		case NETHER_BRICK:
-			return new Step(material);
+			return new Step(material.getItemType());
 			
 		case QUARTZ_BLOCK:
 		default:
@@ -183,7 +183,7 @@ public class TextWriter
 		}
 	}
 	
-	private static MaterialData mapBlockType(BlockType type, BlockFace face, Material material)
+	private static MaterialData mapBlockType(BlockType type, BlockFace face, MaterialData material)
 	{
 		MaterialData data = null;
 		
@@ -221,7 +221,7 @@ public class TextWriter
 			((Stairs)data).setInverted(true);
 			break;
 		case Solid:
-			return new MaterialData(material);
+			return material;
 		}
 		
 		return data;

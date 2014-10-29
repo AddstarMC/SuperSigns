@@ -62,11 +62,23 @@ public class SetMaterialCommand implements ICommand
 		if(sign == null)
 			throw new BadArgumentException(0, "That sign does not exist");
 		
-		Material material = Material.valueOf(args[1].toUpperCase());
-		if(material == null)
-			throw new BadArgumentException(1, "Unknown material " + args[1]);
+		Material type;
+		int data = 0;
+		if (args[1].contains(":"))
+		{
+			type = Material.valueOf(args[1].split(":", 2)[0].toUpperCase());
+			data = Integer.parseInt(args[1].split(":", 2)[1]);
+		}
+		else
+			type = Material.valueOf(args[1].toUpperCase());
 		
-		sign.setMaterial(material);
+		if(type == null)
+			throw new BadArgumentException(1, "Unknown material " + args[3]);
+		
+		if(!type.isBlock() || type.hasGravity() || !type.isSolid())
+			throw new BadArgumentException(1, "Material cannot be an item, a block that falls under gravity, or not a full block");
+		
+		sign.setMaterial(type.getNewData((byte)data));
 		
 		sign.redraw();
 		plugin.saveSign(args[0]);

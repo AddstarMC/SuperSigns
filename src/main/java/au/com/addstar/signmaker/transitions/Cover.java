@@ -49,7 +49,7 @@ public class Cover implements Transition
 	}
 
 	@Override
-	public void setMaterial( Material mat )	{}
+	public void setMaterial( MaterialData mat )	{}
 
 	@Override
 	public boolean isDone()

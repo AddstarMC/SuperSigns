@@ -77,11 +77,20 @@ public class WriteCommand implements ICommand
 		if(justification == null)
 			throw new BadArgumentException(1, "Unknown value for justification. Valid values are: Left, Center, and Right");
 		
-		Material material = Material.valueOf(args[2].toUpperCase());
-		if(material == null)
-			throw new BadArgumentException(2, "Unknown material " + args[2]);
+		Material type;
+		int data = 0;
+		if (args[2].contains(":"))
+		{
+			type = Material.valueOf(args[2].split(":", 2)[0].toUpperCase());
+			data = Integer.parseInt(args[2].split(":", 2)[1]);
+		}
+		else
+			type = Material.valueOf(args[2].toUpperCase());
 		
-		if(!material.isBlock() || material.hasGravity() || !material.isSolid())
+		if(type == null)
+			throw new BadArgumentException(2, "Unknown material " + args[3]);
+		
+		if(!type.isBlock() || type.hasGravity() || !type.isSolid())
 			throw new BadArgumentException(2, "Material cannot be an item, a block that falls under gravity, or not a full block");
 		
 		String text = "";
@@ -96,10 +105,10 @@ public class WriteCommand implements ICommand
 		
 		BlockFace face = TextWriter.rotateRight(TextWriter.lookToFace(((Player)sender).getLocation().getYaw()));
 		
-		sender.sendMessage(ChatColor.GREEN + "Creating text '" + text + "' at your location using justification " + justification.name() + " with font " + set.getName() + " using material " + material.name());
+		sender.sendMessage(ChatColor.GREEN + "Creating text '" + text + "' at your location using justification " + justification.name() + " with font " + set.getName() + " using material " + type.name());
 		
 		TextSign temp = new TextSign(((Player)sender).getLocation(), face, set.getName());
-		temp.setMaterial(material);
+		temp.setMaterial(type.getNewData((byte)data));
 		temp.setJustification(justification);
 		temp.setText(text);
 		temp.redraw();
