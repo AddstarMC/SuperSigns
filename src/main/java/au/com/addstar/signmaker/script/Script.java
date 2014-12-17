@@ -50,7 +50,7 @@ public class Script
 				++lineNumber;
 				line = line.trim();
 				
-				if (line.isEmpty())
+				if (line.isEmpty() || line.startsWith("#"))
 					continue;
 				
 				if (line.startsWith("@"))
@@ -72,10 +72,31 @@ public class Script
 				}
 				else
 				{
+					// Allow carrying over to new line by ending with a \
+					String full;
+					if (line.endsWith("\\"))
+					{
+						full = line.substring(0, line.length()-1);
+						while((line = reader.readLine()) != null)
+						{
+							++lineNumber;
+							line = line.trim();
+							if (line.endsWith("\\"))
+								full += "\n" + line.substring(0, line.length()-1);
+							else
+							{
+								full += "\n" + line;
+								break;
+							}
+						}
+					}
+					else
+						full = line;
+					
 					try
 					{
 						Action action = new Action(this);
-						action.load(line.split(" "));
+						action.load(full.split(" "));
 						group.addAction(action);
 					}
 					catch(IllegalArgumentException e)
