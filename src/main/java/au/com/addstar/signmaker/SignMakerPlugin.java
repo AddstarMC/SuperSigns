@@ -35,6 +35,9 @@ public class SignMakerPlugin extends JavaPlugin
 		mSignFolder = new File(getDataFolder(), "signs");
 		mSignFolder.mkdirs();
 		
+		mScriptsFolder = new File(getDataFolder(), "scripts");
+		mScriptsFolder.mkdirs();
+		
 		TextWriter.reloadFonts();
 		reloadSigns();
 		
@@ -108,6 +111,12 @@ public class SignMakerPlugin extends JavaPlugin
 	public static File getFontFolder()
 	{
 		return mFontFolder;
+	}
+	
+	private static File mScriptsFolder;
+	public static File getScriptsFolder()
+	{
+		return mScriptsFolder;
 	}
 	
 	public static List<String> matchString(String string, Collection<String> strings)
