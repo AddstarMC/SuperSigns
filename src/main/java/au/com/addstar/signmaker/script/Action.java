@@ -1,6 +1,7 @@
 package au.com.addstar.signmaker.script;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.material.MaterialData;
 
@@ -29,11 +30,20 @@ public class Action
 	{
 		validateLength(args, 2, "There is no action specified");
 		
+		if (args[0].equalsIgnoreCase("exec"))
+		{
+			mType = ActionType.Exec;
+			mParams = new Object[] {StringUtils.join(args, ' ', 1, args.length)};
+			return;
+		}
+		
 		mSignId = args[0];
 		
 		mType = null;
 		for(ActionType type : ActionType.values())
 		{
+			if (type == ActionType.Exec)
+				continue;
 			if (type.name().equalsIgnoreCase(args[1]))
 			{
 				mType = type;
@@ -148,11 +158,14 @@ public class Action
 	
 	public void execute(SignMakerPlugin plugin)
 	{
-		mSign = plugin.getSign(mSignId);
-		if (mSign == null)
+		if (mSignId != null)
 		{
-			mScript.logError(String.format("Attempted to perform action %s on non existant sign %s", mType, mSignId));
-			return;
+			mSign = plugin.getSign(mSignId);
+			if (mSign == null)
+			{
+				mScript.logError(String.format("Attempted to perform action %s on non existant sign %s", mType, mSignId));
+				return;
+			}
 		}
 		
 		switch(mType)
@@ -188,6 +201,9 @@ public class Action
 			runner.start(plugin);
 			break;
 		}
+		case Exec:
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), (String)mParams[0]);
+			break;
 		}
 	}
 	

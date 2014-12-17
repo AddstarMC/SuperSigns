@@ -8,5 +8,6 @@ public enum ActionType
 	Font,
 	Material,
 	Align,
-	Change
+	Change,
+	Exec
 }
