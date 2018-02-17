@@ -3,32 +3,65 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>au.com.addstar</groupId>
   <artifactId>SuperSigns</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>SuperSigns</name>
-  
+  <scm>
+    <connection>scm:git:git@github.com:AddstarMC/Colormatch.git</connection>
+    <developerConnection>scm:git:git@github.com:AddstarMC/Colormatch.git</developerConnection>
+    <url>https://github.com/AddstarMC/Colormatch</url>
+    <tag>HEAD</tag>
+  </scm>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <build.number/>
+    <plugin.version>${project.version}-${build.number}</plugin.version>
+    <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+    <spigot.version>1.12.2-R0.1-SNAPSHOT</spigot.version>
+  </properties>
+  <developers>
+    <developer>
+      <id>AddstarMC</id>
+      <name>AddstarMC</name>
+      <url>http://github.com/AddstarMC</url>
+      <roles>
+        <role>developer</role>
+        <role>maintainer</role>
+      </roles>
+      <timezone>10</timezone>
+    </developer>
+  </developers>
   <repositories>
     <repository>
-      <id>bukkit-maven</id>
-      <url>http://repo.bukkit.org/content/repositories/releases/</url>
+      <id>spigot-repo</id>
+      <url>https://hub.spigotmc.org/nexus/content/groups/public</url>
+    </repository>
+
+    <!-- Addstar repos -->
+    <repository>
+      <id>addstar-repo</id>
+      <url>http://maven.addstar.com.au/artifactory/ext-release-local</url>
       <snapshots>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
       </snapshots>
     </repository>
     <repository>
-      <id>bukkit-repo</id>
-      <url>http://repo.bukkit.org/content/groups/public/</url>
+      <id>addstar-snapshot-repo</id>
+      <url>http://maven.addstar.com.au/artifactory/ext-snapshot-local</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
     </repository>
   </repositories>
   <dependencies>
   	<dependency>
   		<groupId>org.bukkit</groupId>
   		<artifactId>bukkit</artifactId>
-  		<version>1.8-R0.1-SNAPSHOT</version>
+  		<version>${spigot.version}</version>
   	</dependency>
   </dependencies>
-  <properties>
-  	<build.version>${pom.version} b${env.BUILD_NUMBER}</build.version>
-  </properties>
   <build>
     <resources>
       <resource>

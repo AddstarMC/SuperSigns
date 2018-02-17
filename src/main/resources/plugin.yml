@@ -1,5 +1,5 @@
 name: SuperSigns
-version: ${build.version}
+version: ${plugin.version}
 author: Schmoller
 
 main: au.com.addstar.signmaker.SignMakerPlugin
