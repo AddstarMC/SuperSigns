@@ -5,18 +5,17 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Bisected;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.type.Stairs;
 import org.bukkit.material.MaterialData;
-import org.bukkit.material.Stairs;
-import org.bukkit.material.Step;
 import org.bukkit.material.WoodenStep;
 
 public class TextWriter
@@ -53,13 +52,15 @@ public class TextWriter
 		return set.getHeight() + (lines - 1) * (set.getHeight() + 1);
 	}
 	
-	public static void writeText(String text, Location location, BlockFace face, Justification justification, CharSet set, MaterialData material)
+	public static void writeText(String text, Location location, BlockFace face, Justification justification, CharSet
+			set, Material material)
 	{
 		for(StoredBlocks blocks : makeText(text, location, face, justification, set, material))
 			blocks.apply();
 	}
 	
-	public static StoredBlocks[] makeText(String text, Location location, BlockFace face, Justification justification, CharSet set, MaterialData material)
+	public static StoredBlocks[] makeText(String text, Location location, BlockFace face, Justification
+			justification, CharSet set, Material material)
 	{
 		String[] lines = text.split("\n");
 		StoredBlocks[] lineBlocks = new StoredBlocks[lines.length];
@@ -95,12 +96,12 @@ public class TextWriter
 		return lineBlocks;
 	}
 	
-	public static StoredBlocks makeText(String text, BlockFace face, CharSet set, MaterialData material)
+	public static StoredBlocks makeText(String text, BlockFace face, CharSet set, Material material)
 	{
 		Validate.isTrue(face == BlockFace.EAST || face == BlockFace.WEST || face == BlockFace.NORTH || face == BlockFace.SOUTH, "Can only use North, East, South, or West direction.");
 		CharDef space = set.getChar(' ');
 		
-		MaterialData[] types = new MaterialData[BlockType.values().length];
+		BlockData[] types = new BlockData[BlockType.values().length];
 		
 		int index = 0;
 		for(BlockType type : BlockType.values())
@@ -141,87 +142,82 @@ public class TextWriter
 		return blocks;
 	}
 	
-	private static Material getStairMaterial(MaterialData material)
+	private static BlockData getStair(Material material)
 	{
-		switch(material.getItemType())
+		switch(material)
 		{
-		case COBBLESTONE:
-			return Material.COBBLESTONE_STAIRS;
-		case SMOOTH_BRICK:
-			return Material.SMOOTH_STAIRS;
-		case BRICK:
-			return Material.BRICK_STAIRS;
-		case WOOD:
-			return Material.WOOD_STAIRS;
-		case NETHER_BRICK:
-			return Material.NETHER_BRICK_STAIRS;
-			
-		case QUARTZ_BLOCK:
-		default:
-			return Material.QUARTZ_STAIRS;
+			case COBBLESTONE:
+			return Bukkit.createBlockData(Material.AIR);
+			case STONE:
+			return Bukkit.createBlockData(Material.STONE_BRICK_STAIRS);
+			case BRICK:
+				return Bukkit.createBlockData(Material.BRICK_STAIRS);
+			case LEGACY_WOOD:
+				return Bukkit.createBlockData(Material.LEGACY_WOOD_STAIRS);
+			case NETHER_BRICK:
+				return Bukkit.createBlockData(Material.NETHER_BRICK_STAIRS);
+			case QUARTZ_BLOCK:
+			default:
+				return Bukkit.createBlockData(Material.QUARTZ_STAIRS);
 		}
 	}
 	
-	private static MaterialData getSlabMaterial(MaterialData material)
+	private static BlockData getSlabMaterial(Material material)
 	{
-		switch(material.getItemType())
+		switch(material)
 		{
 		case COBBLESTONE:
-			return new Step(material.getItemType());
-		case SMOOTH_BRICK:
-			return new Step(material.getItemType());
+			return Bukkit.createBlockData(material);
+			case LEGACY_SMOOTH_BRICK:
+			return Bukkit.createBlockData(Material.STONE_SLAB);
 		case BRICK:
-			return new Step(material.getItemType());
-		case WOOD:
-			return new WoodenStep();
+			return Bukkit.createBlockData(Material.BRICK_SLAB);
+			case LEGACY_WOOD:
+			return Bukkit.createBlockData(Material.LEGACY_WOOD_STEP)
 		case NETHER_BRICK:
-			return new Step(material.getItemType());
+			return Bukkit.createBlockData(Material.NETHER_BRICK_SLAB);
 			
 		case QUARTZ_BLOCK:
 		default:
-			return new Step(Material.QUARTZ_BLOCK);
+			return Bukkit.createBlockData(Material.QUARTZ_SLAB);
 		}
 	}
 	
-	private static MaterialData mapBlockType(BlockType type, BlockFace face, MaterialData material)
+	private static BlockData mapBlockType(BlockType type, BlockFace face, Material material)
 	{
-		MaterialData data = null;
+		BlockData data = null;
 		
 		switch(type)
 		{
 		case Empty:
-			return new MaterialData(Material.AIR);
+			return null;
 		case HalfLower:
 			data = getSlabMaterial(material);
+			((Bisected) data).setHalf(Bisected.Half.BOTTOM);
 			break;
 		case HalfUpper:
 			data = getSlabMaterial(material);
-			
-			if(data instanceof WoodenStep)
-				((WoodenStep)data).setInverted(true);
-			else
-				((Step)data).setInverted(true);
-			break;
+			((Bisected) data).setHalf(Bisected.Half.TOP);
 		case LeftLower:
-			data = new Stairs(getStairMaterial(material));
-			((Stairs)data).setFacingDirection(face);
+			data = getStair(material);
+			((Stairs)data).setFacing(face);
 			break;
 		case LeftUpper:
-			data = new Stairs(getStairMaterial(material));
-			((Stairs)data).setFacingDirection(face);
-			((Stairs)data).setInverted(true);
+			data = getStair(material);
+			((Stairs)data).setFacing(face);
+			((Stairs)data).setHalf(true);
 			break;
 		case RightLower:
-			data = new Stairs(getStairMaterial(material));
-			((Stairs)data).setFacingDirection(face.getOppositeFace());
+			data = getStair(material);
+			((Stairs)data).setFacing(face.getOppositeFace());
 			break;
 		case RightUpper:
-			data = new Stairs(getStairMaterial(material));
-			((Stairs)data).setFacingDirection(face.getOppositeFace());
-			((Stairs)data).setInverted(true);
+			data = getStair(material);
+			((Stairs)data).setFacing(face.getOppositeFace());
+			((Stairs)data).setShape();
 			break;
 		case Solid:
-			return material;
+			return new (material);
 		}
 		
 		return data;

@@ -69,7 +69,7 @@ public class Action
 		case Material:
 			validateLength(args, 3, "Expected: material <type>");
 			
-			mParams = new Object[] {loadMaterialData(args[2])};
+			mParams = new Object[] {loadMaterial(args[2])};
 			break;
 		case Text:
 			validateLength(args, 3, "There is no text specified");
@@ -102,25 +102,17 @@ public class Action
 	}
 	
 	@SuppressWarnings( "deprecation" )
-	private MaterialData loadMaterialData(String value)
+	private Material loadMaterial(String value)
 	{
 		Material type;
-		int data = 0;
-		if (value.contains(":"))
-		{
-			type = Material.valueOf(value.split(":", 2)[0].toUpperCase());
-			data = Integer.parseInt(value.split(":", 2)[1]);
-		}
-		else
-			type = Material.valueOf(value.toUpperCase());
+		type = Material.valueOf(value.toUpperCase());
 		
 		if(type == null)
 			throw new IllegalArgumentException("Unknown material " + value);
-		
 		if(!type.isBlock() || type.hasGravity() || !type.isSolid())
 			throw new IllegalArgumentException("Material cannot be an item, a block that falls under gravity, or not a full block");
 		
-		return type.getNewData((byte)data);
+		return type;
 	}
 	
 	private void loadTransition(String[] args)
@@ -183,7 +175,7 @@ public class Action
 			mSign.setFont((String)mParams[0]);
 			break;
 		case Material:
-			mSign.setMaterial((MaterialData)mParams[0]);
+			mSign.setMaterial((Material) mParams[0]);
 			break;
 		case Text:
 			mSign.setText((String)mParams[0]);

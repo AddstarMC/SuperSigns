@@ -6,7 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
-import org.bukkit.material.MaterialData;
+import org.bukkit.block.data.BlockData;
 
 public class StoredBlocks
 {
@@ -14,7 +14,7 @@ public class StoredBlocks
 	private int mHeight;
 	private BlockFace mFacing;
 	
-	private MaterialData[] mBlocks;
+	private BlockData[] mBlocks;
 	
 	private Location mLocation;
 	
@@ -24,7 +24,7 @@ public class StoredBlocks
 		mHeight = height;
 		mFacing = facing;
 		
-		mBlocks = new MaterialData[width*height];
+		mBlocks = new BlockData[width*height];
 	}
 	
 	public int getWidth()
@@ -52,12 +52,12 @@ public class StoredBlocks
 		return mFacing;
 	}
 	
-	public MaterialData getBlock(int x, int y)
+	public BlockData getBlock(int x, int y)
 	{
 		return mBlocks[x + y * mWidth];
 	}
 	
-	public void setBlock(int x, int y, MaterialData block)
+	public void setBlock(int x, int y, BlockData block)
 	{
 		mBlocks[x + y * mWidth] = block;
 	}
@@ -74,15 +74,12 @@ public class StoredBlocks
 		{
 			for(int y = 0; y < mHeight; ++y)
 			{
-				MaterialData mat = mBlocks[x + y * mWidth];
-				if(mat == null || mat.getItemType() == Material.AIR)
+				BlockData mat = mBlocks[x + y * mWidth];
+				if(mat == null || mat.getMaterial() == Material.AIR)
 					continue;
-				
 				Block block = location.getWorld().getBlockAt(location.getBlockX() + (x * mFacing.getModX()), location.getBlockY() + y, location.getBlockZ() + (x * mFacing.getModZ()));
-				block.setType(mat.getItemType());
-				
+				block.setData(mat);
 				BlockState state = block.getState();
-				state.setData(mat);
 				state.update(true);
 			}
 		}

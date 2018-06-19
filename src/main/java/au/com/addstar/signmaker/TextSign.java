@@ -23,7 +23,7 @@ public class TextSign
 	private BlockVector mMaximum;
 	private BlockVector mOrigin;
 	
-	private MaterialData mMaterial;
+	private Material material;
 	private BlockFace mFace;
 	private Justification mJustification;
 	private String mFont;
@@ -69,10 +69,10 @@ public class TextSign
 		clear();
 		
 		CharSet font = TextWriter.getFont(mFont);
-		if(font == null || mMaterial == null || mText == null || mJustification == null)
+		if(font == null || material == null || mText == null || mJustification == null)
 			return;
 		
-		TextWriter.writeText(mText, mOrigin.toLocation(mWorld), mFace, mJustification, font, mMaterial);
+		TextWriter.writeText(mText, mOrigin.toLocation(mWorld), mFace, mJustification, font, material);
 		
 		int size = TextWriter.getWidth(mText, font);
 		int height = TextWriter.getHeight(mText, font);
@@ -110,14 +110,14 @@ public class TextSign
 		return mText;
 	}
 	
-	public void setMaterial(MaterialData material)
+	public void setMaterial(Material material)
 	{
-		mMaterial = material;
+		material = material;
 	}
 	
-	public MaterialData getMaterial()
+	public Material getMaterial()
 	{
-		return mMaterial;
+		return material;
 	}
 	
 	public void setJustification(Justification justification)
@@ -179,10 +179,9 @@ public class TextSign
 			section.set("text", mText);
 		section.set("world", mWorldName);
 		
-		if(mMaterial != null)
+		if(material != null)
 		{
-			section.set("material", mMaterial.getItemType().name());
-			section.set("materialdata", mMaterial.getData());
+			section.set("material", material.name());
 		}
 		
 		section.set("face", mFace.name());
@@ -220,11 +219,7 @@ public class TextSign
 		if(section.isString("material"))
 		{
 			Material mat = Material.valueOf(section.getString("material"));
-			int data = 0;
-			if (section.isInt("materialdata"))
-				data = section.getInt("materialdata");
-			
-			sign.setMaterial(mat.getNewData((byte)data));
+			sign.setMaterial(mat);
 		}
 		sign.setFacing(BlockFace.valueOf(section.getString("face")));
 		if(section.isString("justification"))
