@@ -61,17 +61,17 @@ public class SetTextCommand implements ICommand
 		if(sign == null)
 			throw new BadArgumentException(0, "That sign does not exist");
 		
-		String text = "";
+		StringBuilder text = new StringBuilder();
 		for(int i = 1; i < args.length; ++i)
 		{
-			if(!text.isEmpty())
-				text += " ";
-			text += args[i];
+			if(text.length() > 0)
+				text.append(" ");
+			text.append(args[i]);
 		}
 		
-		text = text.replaceAll("&v", "\n");
+		text = new StringBuilder(text.toString().replaceAll("&v", "\n"));
 		
-		sign.setText(text);
+		sign.setText(text.toString());
 		
 		sign.redraw();
 		plugin.saveSign(args[0]);

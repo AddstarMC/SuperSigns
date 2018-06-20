@@ -3,7 +3,6 @@ package au.com.addstar.signmaker.script;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.material.MaterialData;
 
 import au.com.addstar.signmaker.Justification;
 import au.com.addstar.signmaker.SignMakerPlugin;

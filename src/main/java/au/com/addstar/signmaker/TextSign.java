@@ -11,7 +11,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.material.MaterialData;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
 
@@ -204,8 +203,7 @@ public class TextSign
 		config.save(file);
 	}
 	
-	public static TextSign load(ConfigurationSection section) throws InvalidConfigurationException
-	{
+	public static TextSign load(ConfigurationSection section) {
 		TextSign sign = new TextSign();
 		
 		sign.mWorldName = section.getString("world");

@@ -93,15 +93,15 @@ public class WriteCommand implements ICommand
 		if(!type.isBlock() || type.hasGravity() || !type.isSolid())
 			throw new BadArgumentException(2, "Material cannot be an item, a block that falls under gravity, or not a full block");
 		
-		String text = "";
+		StringBuilder text = new StringBuilder();
 		for(int i = 3; i < args.length; ++i)
 		{
-			if(!text.isEmpty())
-				text += " ";
-			text += args[i];
+			if(text.length() > 0)
+				text.append(" ");
+			text.append(args[i]);
 		}
 		
-		text = text.replaceAll("&v", "\n");
+		text = new StringBuilder(text.toString().replaceAll("&v", "\n"));
 		
 		BlockFace face = TextWriter.rotateRight(TextWriter.lookToFace(((Player)sender).getLocation().getYaw()));
 		
@@ -110,11 +110,11 @@ public class WriteCommand implements ICommand
 		TextSign temp = new TextSign(((Player)sender).getLocation(), face, set.getName());
 		temp.setMaterial(type);
 		temp.setJustification(justification);
-		temp.setText(text);
+		temp.setText(text.toString());
 		temp.redraw();
 
 		SignMakerPlugin.lastSign.put((Player)sender, temp);
-		SignMakerPlugin.lastSignName.remove((Player)sender);
+		SignMakerPlugin.lastSignName.remove(sender);
 		
 		return true;
 	}

@@ -40,7 +40,7 @@ public class CommandDispatcher
 	}
 	/**
 	 * Registers a command to be handled by this dispatcher
-	 * @param command
+	 * @param command the command to register
 	 */
 	public void registerCommand(ICommand command)
 	{
@@ -129,19 +129,19 @@ public class CommandDispatcher
 		}
 		catch(BadArgumentException e)
 		{
-			String cmdString = ChatColor.GRAY + parent;
+			StringBuilder cmdString = new StringBuilder(ChatColor.GRAY + parent);
 			for(int i = 0; i < args.length; ++i)
 			{
 				if(i == e.getArgument() + 1)
-					cmdString += ChatColor.RED + args[i] + ChatColor.GRAY;
+					cmdString.append(ChatColor.RED).append(args[i]).append(ChatColor.GRAY);
 				else
-					cmdString += args[i];
+					cmdString.append(args[i]);
 				
-				cmdString += " ";
+				cmdString.append(" ");
 			}
 			
 			if(e.getArgument() >= args.length - 1)
-				cmdString += ChatColor.RED + "?";
+				cmdString.append(ChatColor.RED + "?");
 			
 			sender.sendMessage(ChatColor.RED + "Error in command: " + cmdString);
 			sender.sendMessage(ChatColor.RED + " " + e.getMessage());
@@ -162,7 +162,7 @@ public class CommandDispatcher
 	}
 	private void displayUsage(CommandSender sender, String parent, String label, String subcommand)
 	{
-		String usage = "";
+		StringBuilder usage = new StringBuilder();
 		
 		boolean first = true;
 		boolean odd = true;
@@ -178,15 +178,15 @@ public class CommandDispatcher
 				continue;
 			
 			if(odd)
-				usage += ChatColor.WHITE;
+				usage.append(ChatColor.WHITE);
 			else
-				usage += ChatColor.GRAY;
+				usage.append(ChatColor.GRAY);
 			odd = !odd;
 			
 			if(first)
-				usage += command.getName();
+				usage.append(command.getName());
 			else
-				usage += ", " + command.getName();
+				usage.append(", ").append(command.getName());
 			
 			first = false;
 		}
@@ -199,7 +199,7 @@ public class CommandDispatcher
 		if(!first)
 		{
 			sender.sendMessage("Valid commands are:");
-			sender.sendMessage(usage);
+			sender.sendMessage(usage.toString());
 		}
 		else
 			sender.sendMessage("There are no commands available to you");

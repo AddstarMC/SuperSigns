@@ -13,7 +13,7 @@ public enum BlockType
 	
 	private char mChar;
 	
-	private BlockType(char c)
+	BlockType(char c)
 	{
 		mChar = c;
 	}

@@ -93,19 +93,19 @@ public class CreateCommand implements ICommand
 			if(!type.isBlock() || type.hasGravity() || !type.isSolid())
 				throw new BadArgumentException(3, "Material cannot be an item, a block that falls under gravity, or not a full block");
 			
-			String text = "";
+			StringBuilder text = new StringBuilder();
 			for(int i = 4; i < args.length; ++i)
 			{
-				if(!text.isEmpty())
-					text += " ";
-				text += args[i];
+				if(text.length() > 0)
+					text.append(" ");
+				text.append(args[i]);
 			}
 			
-			text = text.replaceAll("&v", "\n");
+			text = new StringBuilder(text.toString().replaceAll("&v", "\n"));
 			
 			sign.setFont(font);
 			sign.setMaterial(type);
-			sign.setText(text);
+			sign.setText(text.toString());
 			
 			sign.redraw();
 		}

@@ -95,18 +95,18 @@ public class ChangeTextCommand implements ICommand
 			throw new BadArgumentException(2, "Speed must be number 1 or greater");
 		}
 		
-		String text = "";
+		StringBuilder text = new StringBuilder();
 		for(int i = 3; i < args.length; ++i)
 		{
-			if(!text.isEmpty())
-				text += " ";
-			text += args[i];
+			if(text.length() > 0)
+				text.append(" ");
+			text.append(args[i]);
 		}
 		
-		text = text.replaceAll("&v", "\n");
+		text = new StringBuilder(text.toString().replaceAll("&v", "\n"));
 		
 		String lastText = sign.getText();
-		sign.setText(text);
+		sign.setText(text.toString());
 		
 		if(type == TransitionType.None)
 			sign.redraw();

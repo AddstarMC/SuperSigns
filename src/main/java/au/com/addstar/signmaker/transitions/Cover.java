@@ -4,7 +4,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.BlockData;
 
 import au.com.addstar.signmaker.StoredBlocks;
 
@@ -92,35 +91,7 @@ public class Cover extends AbstractTransition
 			}
 			
 			// Draw new
-			if(current != null)
-			{
-				int dstX = current.getLocation().getBlockX();
-				int dstY = current.getLocation().getBlockY();
-				int dstZ = current.getLocation().getBlockZ();
-				BlockFace face = current.getFacing();
-				
-				for(int x = 0; x < current.getWidth(); ++x)
-				{
-					if(mUp)
-					{
-						for(int y = current.getHeight() - mOffset + 1; y < current.getHeight(); ++y)
-						{
-							BlockData data = current.getBlock(x, y);
-							Block dest = mWorld.getBlockAt(dstX + (x * face.getModX()), dstY - current.getHeight() + mOffset + y - 1, dstZ + (x * face.getModZ()));
-							updateBlock(data,dest);
-						}
-					}
-					else
-					{
-						for(int y = 0; y < current.getHeight() && y < mOffset - 1; ++y)
-						{
-							BlockData data = current.getBlock(x, y);
-							Block dest = mWorld.getBlockAt(dstX + (x * face.getModX()), dstY + (current.getHeight() - mOffset + 1 + y), dstZ + (x * face.getModZ()));
-							updateBlock(data,dest);
-						}
-					}
-				}
-			}
+			updateCurrentBlocks(current,mWorld,mOffset,mUp);
 			
 		}
 	}
