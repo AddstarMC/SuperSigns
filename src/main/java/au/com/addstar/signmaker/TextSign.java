@@ -112,7 +112,7 @@ public class TextSign
 	
 	public void setMaterial(Material material)
 	{
-		material = material;
+		this.material = material;
 	}
 	
 	public Material getMaterial()

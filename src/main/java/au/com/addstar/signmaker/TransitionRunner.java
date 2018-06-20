@@ -24,10 +24,10 @@ public class TransitionRunner implements Runnable
 		
 		mEffect = effect.newTransition();
 		Validate.notNull(mEffect, "Cannot use Transition runner on " + effect);
-		mEffect.setOriginal(TextWriter.makeText(lastText, sign.getOrigin(), sign.getFacing(), sign.getJustification(), font, sign.getMaterial()));
+		mEffect.setOriginal(TextWriter.makeText(lastText, sign.getOrigin(), sign.getFacing(), sign.getJustification()
+				, font, sign.getMaterial()),sign.getMaterial());
 		mEffect.setNew(TextWriter.makeText(sign.getText(), sign.getOrigin(), sign.getFacing(), sign.getJustification(), font, sign.getMaterial()));
 		mEffect.setMaterial(sign.getMaterial());
-		
 		mSign = sign;
 		mTime = time;
 	}

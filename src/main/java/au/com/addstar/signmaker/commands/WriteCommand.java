@@ -108,7 +108,7 @@ public class WriteCommand implements ICommand
 		sender.sendMessage(ChatColor.GREEN + "Creating text '" + text + "' at your location using justification " + justification.name() + " with font " + set.getName() + " using material " + type.name());
 		
 		TextSign temp = new TextSign(((Player)sender).getLocation(), face, set.getName());
-		temp.setMaterial(type.getNewData((byte)data));
+		temp.setMaterial(type);
 		temp.setJustification(justification);
 		temp.setText(text);
 		temp.redraw();

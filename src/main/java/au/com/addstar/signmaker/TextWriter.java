@@ -11,6 +11,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.BlockData;
@@ -133,7 +134,8 @@ public class TextWriter
 			for(int x = 0; x < ch.getWidth(); ++x)
 			{
 				for(int y = 0; y < set.getHeight(); ++y)
-					blocks.setBlock(offset + x, y, types[ch.getType(x, y).ordinal()].clone());
+					//set each stored block to its own instance.
+					blocks.setBlock(offset + x, y, Bukkit.createBlockData(types[ch.getType(x, y).ordinal()].getAsString()));
 			}
 			
 			offset += ch.getWidth() + 1;
@@ -173,7 +175,7 @@ public class TextWriter
 		case BRICK:
 			return Bukkit.createBlockData(Material.BRICK_SLAB);
 			case LEGACY_WOOD:
-			return Bukkit.createBlockData(Material.LEGACY_WOOD_STEP)
+			return Bukkit.createBlockData(Material.LEGACY_WOOD_STEP);
 		case NETHER_BRICK:
 			return Bukkit.createBlockData(Material.NETHER_BRICK_SLAB);
 			
@@ -205,7 +207,7 @@ public class TextWriter
 		case LeftUpper:
 			data = getStair(material);
 			((Stairs)data).setFacing(face);
-			((Stairs)data).setHalf(true);
+			((Stairs)data).setHalf(Bisected.Half.TOP);
 			break;
 		case RightLower:
 			data = getStair(material);
@@ -214,12 +216,11 @@ public class TextWriter
 		case RightUpper:
 			data = getStair(material);
 			((Stairs)data).setFacing(face.getOppositeFace());
-			((Stairs)data).setShape();
+			((Stairs)data).setHalf(Bisected.Half.TOP);
 			break;
 		case Solid:
-			return new (material);
+			return Bukkit.createBlockData(material);
 		}
-		
 		return data;
 	}
 	

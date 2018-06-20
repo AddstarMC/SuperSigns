@@ -4,12 +4,11 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
-import org.bukkit.material.MaterialData;
+import org.bukkit.block.data.BlockData;
 
 import au.com.addstar.signmaker.StoredBlocks;
 
-public class VScroll implements Transition
+public class VScroll extends AbstractTransition
 {
 	private StoredBlocks[] mOld;
 	private StoredBlocks[] mNew;
@@ -27,8 +26,9 @@ public class VScroll implements Transition
 	}
 	
 	@Override
-	public void setOriginal( StoredBlocks[] original )
+	public void setOriginal( StoredBlocks[] original ,Material material)
 	{
+		setMaterial(material);
 		mOld = original;
 		if(original.length > 0)
 		{
@@ -47,9 +47,6 @@ public class VScroll implements Transition
 			mWorld = blocks[0].getLocation().getWorld();
 		}
 	}
-
-	@Override
-	public void setMaterial( MaterialData mat )	{}
 
 	@Override
 	public boolean isDone()
@@ -83,17 +80,9 @@ public class VScroll implements Transition
 					{
 						for(int y = 0; y < old.getHeight() - mOffset; ++y)
 						{
-							MaterialData data = old.getBlock(x, y);
+							BlockData data = old.getBlock(x, y);
 							Block dest = mWorld.getBlockAt(dstX + (x * face.getModX()), dstY + y + mOffset, dstZ + (x * face.getModZ()));
-							if(data == null || data.getItemType() == Material.AIR)
-								dest.setType(Material.AIR);
-							else
-							{
-								dest.setType(data.getItemType());
-								BlockState state = dest.getState();
-								state.setData(data);
-								state.update(true);
-							}
+							updateBlock(data, dest);
 						}
 						
 						Block dest = mWorld.getBlockAt(dstX + (x * face.getModX()), dstY + (mOffset-1), dstZ + (x * face.getModZ()));
@@ -103,17 +92,9 @@ public class VScroll implements Transition
 					{
 						for(int y = mOffset; y < old.getHeight(); ++y)
 						{
-							MaterialData data = old.getBlock(x, y);
+							BlockData data = old.getBlock(x, y);
 							Block dest = mWorld.getBlockAt(dstX + (x * face.getModX()), dstY + (y - mOffset), dstZ + (x * face.getModZ()));
-							if(data == null || data.getItemType() == Material.AIR)
-								dest.setType(Material.AIR);
-							else
-							{
-								dest.setType(data.getItemType());
-								BlockState state = dest.getState();
-								state.setData(data);
-								state.update(true);
-							}
+							updateBlock(data, dest);
 						}
 						
 						Block dest = mWorld.getBlockAt(dstX + (x * face.getModX()), dstY + (old.getHeight() - mOffset), dstZ + (x * face.getModZ()));
@@ -136,34 +117,18 @@ public class VScroll implements Transition
 					{
 						for(int y = current.getHeight() - mOffset + 1; y < current.getHeight(); ++y)
 						{
-							MaterialData data = current.getBlock(x, y);
+							BlockData data = current.getBlock(x, y);
 							Block dest = mWorld.getBlockAt(dstX + (x * face.getModX()), dstY - current.getHeight() + mOffset + y - 1, dstZ + (x * face.getModZ()));
-							if(data == null || data.getItemType() == Material.AIR)
-								dest.setType(Material.AIR);
-							else
-							{
-								dest.setType(data.getItemType());
-								BlockState state = dest.getState();
-								state.setData(data);
-								state.update(true);
-							}
+							updateBlock(data, dest);
 						}
 					}
 					else
 					{
 						for(int y = 0; y < current.getHeight() && y < mOffset - 1; ++y)
 						{
-							MaterialData data = current.getBlock(x, y);
+							BlockData data = current.getBlock(x, y);
 							Block dest = mWorld.getBlockAt(dstX + (x * face.getModX()), dstY + (current.getHeight() - mOffset + 1 + y), dstZ + (x * face.getModZ()));
-							if(data == null || data.getItemType() == Material.AIR)
-								dest.setType(Material.AIR);
-							else
-							{
-								dest.setType(data.getItemType());
-								BlockState state = dest.getState();
-								state.setData(data);
-								state.update(true);
-							}
+							updateBlock(data, dest);
 						}
 					}
 				}

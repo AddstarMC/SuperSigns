@@ -4,17 +4,16 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
-import org.bukkit.material.MaterialData;
+import org.bukkit.block.data.BlockData;
 
 import au.com.addstar.signmaker.StoredBlocks;
 
-public class Cover implements Transition
+public class Cover extends AbstractTransition
 {
 	private StoredBlocks[] mOld;
 	private StoredBlocks[] mNew;
-	
-	private World mWorld;
+    
+    private World mWorld;
 	
 	private int mOffset;
 	private int mTotal;
@@ -27,8 +26,9 @@ public class Cover implements Transition
 	}
 	
 	@Override
-	public void setOriginal( StoredBlocks[] original )
+	public void setOriginal( StoredBlocks[] original, Material mat )
 	{
+	    setMaterial(mat);
 		mOld = original;
 		if(original.length > 0)
 		{
@@ -47,9 +47,6 @@ public class Cover implements Transition
 			mWorld = blocks[0].getLocation().getWorld();
 		}
 	}
-
-	@Override
-	public void setMaterial( MaterialData mat )	{}
 
 	@Override
 	public boolean isDone()
@@ -108,34 +105,18 @@ public class Cover implements Transition
 					{
 						for(int y = current.getHeight() - mOffset + 1; y < current.getHeight(); ++y)
 						{
-							MaterialData data = current.getBlock(x, y);
+							BlockData data = current.getBlock(x, y);
 							Block dest = mWorld.getBlockAt(dstX + (x * face.getModX()), dstY - current.getHeight() + mOffset + y - 1, dstZ + (x * face.getModZ()));
-							if(data == null || data.getItemType() == Material.AIR)
-								dest.setType(Material.AIR);
-							else
-							{
-								dest.setType(data.getItemType());
-								BlockState state = dest.getState();
-								state.setData(data);
-								state.update(true);
-							}
+							updateBlock(data,dest);
 						}
 					}
 					else
 					{
 						for(int y = 0; y < current.getHeight() && y < mOffset - 1; ++y)
 						{
-							MaterialData data = current.getBlock(x, y);
+							BlockData data = current.getBlock(x, y);
 							Block dest = mWorld.getBlockAt(dstX + (x * face.getModX()), dstY + (current.getHeight() - mOffset + 1 + y), dstZ + (x * face.getModZ()));
-							if(data == null || data.getItemType() == Material.AIR)
-								dest.setType(Material.AIR);
-							else
-							{
-								dest.setType(data.getItemType());
-								BlockState state = dest.getState();
-								state.setData(data);
-								state.update(true);
-							}
+							updateBlock(data,dest);
 						}
 					}
 				}
