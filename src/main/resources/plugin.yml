@@ -1,7 +1,8 @@
 name: SuperSigns
 version: ${plugin.version}
-author: Schmoller
 api-version: ${spigot.api.version}
+author: [Schmoller, Narimm]
+
 main: au.com.addstar.signmaker.SignMakerPlugin
 
 commands:
