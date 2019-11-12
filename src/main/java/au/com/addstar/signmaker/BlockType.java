@@ -16,12 +16,17 @@ public enum BlockType {
     mChar = c;
   }
 
+  /**
+   * Gets a BlockType from a char map
+   * @param c char
+   * @return BlockType
+   */
   public static BlockType from(char c) {
     for (BlockType type : values()) {
-      if (type.mChar == c)
+      if (type.mChar == c) {
         return type;
+      }
     }
-
     return null;
   }
 }

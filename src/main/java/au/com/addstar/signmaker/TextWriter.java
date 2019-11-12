@@ -22,6 +22,12 @@ import org.bukkit.block.data.type.Stairs;
 public class TextWriter {
   private static Map<String, CharSet> mFonts = new HashMap<>();
 
+  /**
+   * Get the width of the text
+   * @param text String to read
+   * @param set the Charset
+   * @return integer
+   */
   public static int getWidth(String text, CharSet set) {
     CharDef space = set.getChar(' ');
 
@@ -30,18 +36,18 @@ public class TextWriter {
 
     for (String line : lines) {
       int size = 0;
-      for (int i = 0; i < line.length(); ++i) {
-        CharDef ch = set.getChar(line.charAt(i));
-        if (ch == null)
+      for (char c : line.toCharArray()) {
+        CharDef ch = set.getChar(c);
+        if (ch == null) {
           ch = space;
-
+        }
         size += ch.getWidth() + 1;
+
       }
-
-      if (size > max)
+      if (size > max) {
         max = size;
+      }
     }
-
     return max;
   }
 
@@ -50,15 +56,35 @@ public class TextWriter {
     return set.getHeight() + (lines - 1) * (set.getHeight() + 1);
   }
 
-  public static void writeText(String text, Location location, BlockFace face, Justification justification, CharSet
+  /**
+   *  Output the Text
+   * @param text The Text
+   * @param location THe Location to start
+   * @param face Which way it faces
+   * @param justification The {@link Justification}
+   * @param set Charset
+   * @param material Material
+   */
+  public static void writeText(String text, Location location, BlockFace face,
+                               Justification justification, CharSet
       set, Material material) {
     for (StoredBlocks blocks : makeText(text, location, face, justification, set, material)) {
       blocks.apply();
     }
   }
 
-  public static StoredBlocks[] makeText(String text, Location location, BlockFace face, Justification
-      justification, CharSet set, Material material) {
+  /**
+   *
+   * @param text String
+   * @param location {@link Location}
+   * @param face {@link BlockFace}
+   * @param justification {@link Justification}
+   * @param set {@link CharSet}
+   * @param material {@link org.bukkit.Material}
+   * @return returns {@link StoredBlocks} array
+   */
+  public static StoredBlocks[] makeText(String text, Location location, BlockFace face,
+                                        Justification justification, CharSet set, Material material) {
     String[] lines = text.split("\n");
     StoredBlocks[] lineBlocks = new StoredBlocks[lines.length];
 
@@ -91,8 +117,18 @@ public class TextWriter {
     return lineBlocks;
   }
 
+  /**
+   *
+   * @param text String
+   * @param face {@link BlockFace}
+   * @param set {@link CharSet}
+   * @param material {@link Material}
+   * @return StoredBlocks
+   */
   public static StoredBlocks makeText(String text, BlockFace face, CharSet set, Material material) {
-    Validate.isTrue(face == BlockFace.EAST || face == BlockFace.WEST || face == BlockFace.NORTH || face == BlockFace.SOUTH, "Can only use North, East, South, or West direction.");
+    Validate.isTrue(face == BlockFace.EAST || face == BlockFace.WEST
+            || face == BlockFace.NORTH || face == BlockFace.SOUTH,
+        "Can only use North, East, South, or West direction.");
     CharDef space = set.getChar(' ');
 
     BlockData[] types = new BlockData[BlockType.values().length];
@@ -107,10 +143,12 @@ public class TextWriter {
     int size = 0;
     for (int i = 0; i < text.length(); ++i) {
       CharDef ch = set.getChar(text.charAt(i));
-      if (ch == null)
+      if (ch == null) {
         ch = space;
-      if (i != 0)
+      }
+      if (i != 0) {
         ++size;
+      }
       size += ch.getWidth();
       chars[i] = ch;
     }
@@ -119,17 +157,12 @@ public class TextWriter {
     int offset = 0;
     StoredBlocks blocks = new StoredBlocks(size, set.getHeight(), face);
 
-    for (int i = 0; i < chars.length; ++i) {
-      CharDef ch = chars[i];
-
+    for (CharDef ch : chars) {
       for (int x = 0; x < ch.getWidth(); ++x) {
-        for (int y = 0; y < set.getHeight(); ++y)
-        //set each stored block to its own instance.
-        {
+        for (int y = 0; y < set.getHeight(); ++y) { //set each stored block to its own instance.
           blocks.setBlock(offset + x, y, Bukkit.createBlockData(types[ch.getType(x, y).ordinal()].getAsString()));
         }
       }
-
       offset += ch.getWidth() + 1;
     }
 
@@ -166,7 +199,6 @@ public class TextWriter {
         return Bukkit.createBlockData(Material.OAK_SLAB);
       case NETHER_BRICK:
         return Bukkit.createBlockData(Material.NETHER_BRICK_SLAB);
-
       case QUARTZ_BLOCK:
       default:
         return Bukkit.createBlockData(Material.QUARTZ_SLAB);
@@ -174,8 +206,7 @@ public class TextWriter {
   }
 
   private static BlockData mapBlockType(BlockType type, BlockFace face, Material material) {
-    BlockData data = null;
-
+    BlockData data;
     switch (type) {
       case Empty:
         return null;
@@ -186,6 +217,7 @@ public class TextWriter {
       case HalfUpper:
         data = getSlabMaterial(material);
         ((Bisected) data).setHalf(Bisected.Half.TOP);
+        break;
       case LeftLower:
         data = getStair(material);
         ((Stairs) data).setFacing(face);
@@ -205,26 +237,34 @@ public class TextWriter {
         ((Stairs) data).setHalf(Bisected.Half.TOP);
         break;
       case Solid:
+      default:
         return Bukkit.createBlockData(material);
     }
     return data;
   }
 
+  /**
+   * @param yaw float
+   * @return {@link BlockFace}
+   */
   public static BlockFace lookToFace(float yaw) {
-    if (yaw <= -180)
+    if (yaw <= -180) {
       yaw += 360;
+    }
 
-    if (yaw >= 180)
+    if (yaw >= 180) {
       yaw -= 360;
+    }
 
-    if (yaw >= -45 && yaw <= 45)
+    if (yaw >= -45 && yaw <= 45) {
       return BlockFace.SOUTH;
-    else if (yaw > 45 && yaw < 135)
+    } else if (yaw > 45 && yaw < 135) {
       return BlockFace.WEST;
-    else if (yaw > -135 && yaw < -45)
+    } else if (yaw > -135 && yaw < -45) {
       return BlockFace.EAST;
-    else
+    } else {
       return BlockFace.NORTH;
+    }
   }
 
   public static BlockFace rotateRight(BlockFace face) {
@@ -241,31 +281,43 @@ public class TextWriter {
     }
   }
 
+  /**
+   *
+   * @param name String
+   * @return {@link CharSet}
+   */
   public static CharSet getFont(String name) {
     return mFonts.get(name.toLowerCase());
   }
 
+  /**
+   * Reload the font files
+   */
   public static void reloadFonts() {
     mFonts.clear();
-    for (File file : SignMakerPlugin.getFontFolder().listFiles()) {
-      try {
-        CharSet font = CharSet.load(file);
-        mFonts.put(font.getName().toLowerCase(), font);
-        System.out.println("Loaded Font " + font.getName());
-      } catch (IllegalArgumentException e) {
-        System.out.println("Failed to load font " + file.getPath());
-        System.out.println(e.getMessage());
-      } catch (IOException e) {
-        System.out.println("Failed to load font " + file.getPath());
-        e.printStackTrace();
+    File[] files = SignMakerPlugin.getFontFolder().listFiles();
+    if (files != null && files.length > 0) {
+      for (File file : files) {
+        try {
+          CharSet font = CharSet.load(file);
+          mFonts.put(font.getName().toLowerCase(), font);
+          System.out.println("Loaded Font " + font.getName());
+        } catch (IllegalArgumentException e) {
+          System.out.println("Failed to load font " + file.getPath());
+          System.out.println(e.getMessage());
+        } catch (IOException e) {
+          System.out.println("Failed to load font " + file.getPath());
+          e.printStackTrace();
+        }
       }
     }
 
     SignMakerPlugin plugin = SignMakerPlugin.instance;
 
     InputStream fontsList = plugin.getResource("fonts.txt");
-    if (fontsList == null)
+    if (fontsList == null) {
       return;
+    }
 
     // Load internal fonts
     BufferedReader reader = new BufferedReader(new InputStreamReader(fontsList));
@@ -276,7 +328,8 @@ public class TextWriter {
         String path = "fonts/" + line;
         InputStream fontFile = plugin.getResource(path);
         if (fontFile == null) {
-          plugin.getLogger().warning("Font " + line + " was specified in the font list but was not found in the jar");
+          plugin.getLogger().warning("Font " + line + " was specified in the font list but"
+              + " was not found in the jar");
           continue;
         }
 
@@ -296,12 +349,15 @@ public class TextWriter {
     }
   }
 
+  /**
+   *
+   * @return List of Strings
+   */
   public static List<String> getFonts() {
     ArrayList<String> fonts = new ArrayList<String>(mFonts.size());
     for (CharSet font : mFonts.values()) {
       fonts.add(font.getName());
     }
-
     return fonts;
   }
 }
