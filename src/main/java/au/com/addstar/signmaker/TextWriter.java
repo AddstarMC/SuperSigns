@@ -9,14 +9,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.type.Slab;
 import org.bukkit.block.data.type.Stairs;
 
 public class TextWriter {
@@ -24,8 +27,9 @@ public class TextWriter {
 
   /**
    * Get the width of the text
+   *
    * @param text String to read
-   * @param set the Charset
+   * @param set  the Charset
    * @return integer
    */
   public static int getWidth(String text, CharSet set) {
@@ -57,30 +61,30 @@ public class TextWriter {
   }
 
   /**
-   *  Output the Text
-   * @param text The Text
-   * @param location THe Location to start
-   * @param face Which way it faces
+   * Output the Text
+   *
+   * @param text          The Text
+   * @param location      THe Location to start
+   * @param face          Which way it faces
    * @param justification The {@link Justification}
-   * @param set Charset
-   * @param material Material
+   * @param set           Charset
+   * @param material      Material
    */
   public static void writeText(String text, Location location, BlockFace face,
                                Justification justification, CharSet
-      set, Material material) {
+                                   set, Material material) {
     for (StoredBlocks blocks : makeText(text, location, face, justification, set, material)) {
       blocks.apply();
     }
   }
 
   /**
-   *
-   * @param text String
-   * @param location {@link Location}
-   * @param face {@link BlockFace}
+   * @param text          String
+   * @param location      {@link Location}
+   * @param face          {@link BlockFace}
    * @param justification {@link Justification}
-   * @param set {@link CharSet}
-   * @param material {@link org.bukkit.Material}
+   * @param set           {@link CharSet}
+   * @param material      {@link org.bukkit.Material}
    * @return returns {@link StoredBlocks} array
    */
   public static StoredBlocks[] makeText(String text, Location location, BlockFace face,
@@ -118,10 +122,9 @@ public class TextWriter {
   }
 
   /**
-   *
-   * @param text String
-   * @param face {@link BlockFace}
-   * @param set {@link CharSet}
+   * @param text     String
+   * @param face     {@link BlockFace}
+   * @param set      {@link CharSet}
    * @param material {@link Material}
    * @return StoredBlocks
    */
@@ -160,7 +163,8 @@ public class TextWriter {
     for (CharDef ch : chars) {
       for (int x = 0; x < ch.getWidth(); ++x) {
         for (int y = 0; y < set.getHeight(); ++y) { //set each stored block to its own instance.
-          blocks.setBlock(offset + x, y, Bukkit.createBlockData(types[ch.getType(x, y).ordinal()].getAsString()));
+          String stringData = types[ch.getType(x, y).ordinal()].getAsString();
+          blocks.setBlock(offset + x, y, Bukkit.createBlockData(stringData));
         }
       }
       offset += ch.getWidth() + 1;
@@ -170,71 +174,114 @@ public class TextWriter {
   }
 
   private static BlockData getStair(Material material) {
+    Material stairMat;
     switch (material) {
       case COBBLESTONE:
-        return Bukkit.createBlockData(Material.AIR);
+        stairMat = Material.COBBLESTONE_STAIRS;
+        break;
       case STONE:
-        return Bukkit.createBlockData(Material.STONE_BRICK_STAIRS);
+        stairMat = Material.STONE_BRICK_STAIRS;
+        break;
       case BRICK:
-        return Bukkit.createBlockData(Material.BRICK_STAIRS);
-      case OAK_LOG:
-        return Bukkit.createBlockData(Material.OAK_STAIRS);
+        stairMat = Material.BRICK_STAIRS;
+        break;
+      case OAK_PLANKS:
+        stairMat = Material.OAK_STAIRS;
+        break;
       case NETHER_BRICK:
-        return Bukkit.createBlockData(Material.NETHER_BRICK_STAIRS);
+        stairMat = Material.NETHER_BRICK_STAIRS;
+        break;
       case QUARTZ_BLOCK:
+        stairMat = Material.QUARTZ_STAIRS;
+        break;
       default:
-        return Bukkit.createBlockData(Material.QUARTZ_STAIRS);
+        stairMat = material;
     }
+    return Bukkit.createBlockData(stairMat);
+
   }
 
   private static BlockData getSlabMaterial(Material material) {
+    Material slabMaterial;
     switch (material) {
       case COBBLESTONE:
-        return Bukkit.createBlockData(material);
+        slabMaterial = Material.COBBLESTONE_SLAB;
+        break;
       case STONE:
-        return Bukkit.createBlockData(Material.STONE_SLAB);
+        slabMaterial = Material.STONE_SLAB;
+        break;
       case BRICK:
-        return Bukkit.createBlockData(Material.BRICK_SLAB);
-      case OAK_LOG:
-        return Bukkit.createBlockData(Material.OAK_SLAB);
+        slabMaterial = Material.BRICK_SLAB;
+        break;
+      case OAK_PLANKS:
+        slabMaterial = Material.OAK_SLAB;
+        break;
       case NETHER_BRICK:
-        return Bukkit.createBlockData(Material.NETHER_BRICK_SLAB);
+        slabMaterial = Material.NETHER_BRICK_SLAB;
+        break;
+      case ANDESITE:
+        slabMaterial = Material.ANDESITE_SLAB;
+        break;
+      case PRISMARINE_BRICKS:
+        slabMaterial = Material.PRISMARINE_BRICK_SLAB;
+        break;
+      case DARK_PRISMARINE:
+        slabMaterial = Material.DARK_PRISMARINE_SLAB;
+        break;
       case QUARTZ_BLOCK:
+        slabMaterial = Material.QUARTZ_SLAB;
+        break;
       default:
-        return Bukkit.createBlockData(Material.QUARTZ_SLAB);
+        slabMaterial = material;
+        break;
     }
+    return Bukkit.createBlockData(slabMaterial);
+
   }
 
-  private static BlockData mapBlockType(BlockType type, BlockFace face, Material material) {
+  protected static BlockData mapBlockType(BlockType type, BlockFace face, Material material) {
     BlockData data;
+    BlockData air = Bukkit.createBlockData(Material.AIR);
     switch (type) {
       case Empty:
-        return null;
+        return air;
       case HalfLower:
         data = getSlabMaterial(material);
-        ((Bisected) data).setHalf(Bisected.Half.BOTTOM);
+        if (data instanceof Slab) {
+          ((Slab) data).setType(Slab.Type.BOTTOM);
+        }
         break;
       case HalfUpper:
         data = getSlabMaterial(material);
-        ((Bisected) data).setHalf(Bisected.Half.TOP);
+        if (data instanceof Slab) {
+          ((Slab) data).setType(Slab.Type.TOP);
+        }
         break;
       case LeftLower:
         data = getStair(material);
-        ((Stairs) data).setFacing(face);
+        if (data instanceof Stairs) {
+          ((Stairs) data).setFacing(face);
+        }
         break;
       case LeftUpper:
         data = getStair(material);
-        ((Stairs) data).setFacing(face);
-        ((Stairs) data).setHalf(Bisected.Half.TOP);
+        if (data instanceof Stairs) {
+          ((Stairs) data).setFacing(face);
+          ((Stairs) data).setHalf(Bisected.Half.TOP);
+        }
         break;
       case RightLower:
         data = getStair(material);
-        ((Stairs) data).setFacing(face.getOppositeFace());
+        if (data instanceof Stairs) {
+          ((Stairs) data).setFacing(face.getOppositeFace());
+        }
         break;
       case RightUpper:
         data = getStair(material);
-        ((Stairs) data).setFacing(face.getOppositeFace());
-        ((Stairs) data).setHalf(Bisected.Half.TOP);
+        if (data instanceof Stairs) {
+          ((Stairs) data).setFacing(face.getOppositeFace());
+          ((Stairs) data).setHalf(Bisected.Half.TOP);
+        }
         break;
       case Solid:
       default:
@@ -282,7 +329,6 @@ public class TextWriter {
   }
 
   /**
-   *
    * @param name String
    * @return {@link CharSet}
    */
@@ -350,11 +396,11 @@ public class TextWriter {
   }
 
   /**
-   *
-   * @return List of Strings
+   * List of fonts
+   * @return List
    */
   public static List<String> getFonts() {
-    ArrayList<String> fonts = new ArrayList<String>(mFonts.size());
+    ArrayList<String> fonts = new ArrayList<>(mFonts.size());
     for (CharSet font : mFonts.values()) {
       fonts.add(font.getName());
     }
